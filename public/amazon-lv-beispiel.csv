@@ -1,0 +1,423 @@
+﻿LV-Position;Kurztext;Maßeinheit;EP;Ur-Menge
+20.53.03.0001.1;Elastische Verbindungsstutzen eckig 250x300x185 bis 3,5m;ST;23,83;2
+20.53.03.0001.2;Elastische Verbindungsstutzen eckig 250x300x185 bis 5,5m;;28,6;
+20.53.03.0001.3;Elastische Verbindungsstutzen eckig 250x300x185 bis 10m;;40,51;
+20.53.03.0002.1;Elastische Verbindungsstutzen eckig 250x410x130 bis 3,5m;ST;29,25;16
+20.53.03.0002.2;Elastische Verbindungsstutzen eckig 250x410x130 bis 5,5m;;35,1;
+20.53.03.0002.3;Elastische Verbindungsstutzen eckig 250x410x130 bis 10m;;49,73;
+20.53.03.0007.1;Flexible VerbindungsSt rund 100 bis 3,5m;ST;19,5;6
+20.53.03.0007.2;Flexible VerbindungsSt rund 100 bis 5,5m;;23,4;
+20.53.03.0007.3;Flexible VerbindungsSt rund 100 bis 10m;;33,15;
+20.53.03.0008.1;Flexible VerbindungsSt rund 125 bis 3,5m;ST;19,5;6
+20.53.03.0008.2;Flexible VerbindungsSt rund 125 bis 5,5m;;23,4;
+20.53.03.0008.3;Flexible VerbindungsSt rund 125 bis 10m;;33,15;
+20.53.03.0009.1;Flexible VerbindungsSt rund 160 bis  3,5m;ST;19,5;6
+20.53.03.0009.2;Flexible VerbindungsSt rund 160 bis  5,5m;;23,4;
+20.53.03.0009.3;Flexible VerbindungsSt rund 160 bis  10m;;33,15;
+20.53.03.0011.1;Flexible VerbindungsSt rund 250 bis 3,5m;ST;19,5;8
+20.53.03.0011.2;Flexible VerbindungsSt rund 250 bis 5,5m;;23,4;
+20.53.03.0011.3;Flexible VerbindungsSt rund 250 bis 10m;;33,15;
+20.53.04.0002.1;Kulissenschalldämpfer 400 x 200 bis 3,5m;ST;61,76;2
+20.53.04.0002.2;Kulissenschalldämpfer 400 x 200 bis 5,5m;;74,11;
+20.53.04.0002.3;Kulissenschalldämpfer 400 x 200 bis 10m;;209,98;
+20.53.04.0011.1;Kulissenschalldämpfer 800 x 600 bis 3,5m;ST;98,81;56
+20.53.04.0011.2;Kulissenschalldämpfer 800 x 600 bis 5,5m;;118,57;
+20.53.04.0011.3;Kulissenschalldämpfer 800 x 600 bis 10m;;167,98;
+21.01.NT.0001.27;Kulissenschalldämpfer 1000 x 600 bis 3,5m;ST;222,32;24
+21.01.NT.0001.28;Kulissenschalldämpfer 1000 x 600 bis 5,5m;;266,78;
+21.01.NT.0001.29;Kulissenschalldämpfer 1000 x 600 bis 10m;;377,94;
+20.53.04.0013.1;Kulissenschalldämpfer 1000 x 700 bis 3,5m;ST;222,32;24
+20.53.04.0013.2;Kulissenschalldämpfer 1000 x 700 bis 5,5m;;266,78;
+20.53.04.0013.3;Kulissenschalldämpfer 1000 x 700 bis 10m;;377,94;
+20.53.04.0018.1;Kulissenschalldämpfer 1800 x 800 bis 3,5m;ST;362,3;2
+20.53.04.0018.2;Kulissenschalldämpfer 1800 x 800 bis5,5 ;;434,76;
+20.53.04.0018.3;Kulissenschalldämpfer 1800 x 800 bis 10m;;615,91;
+20.53.04.0019.1;Rohrschalldämpfer 100x1000 bis 3,5m;ST;30,33;56
+20.53.04.0019.2;Rohrschalldämpfer 100x1000 bis 5,5m;;36,4;
+20.53.04.0019.3;Rohrschalldämpfer 100x1000 bis 10m;;51,56;
+20.53.04.0020.1;Rohrschalldämpfer 125x1000 bis 3,5m;ST;30,33;6
+20.53.04.0020.2;Rohrschalldämpfer 125x1000 bis 5,5m;;36,4;
+20.53.04.0020.3;Rohrschalldämpfer 125x1000 bis 10m;;51,56;
+20.53.04.0021.1;Rohrschalldämpfer 160x1000 bis 3,5m;ST;30,33;2
+20.53.04.0021.2;Rohrschalldämpfer 160x1000 bis 5,5m;;36,4;
+20.53.04.0021.3;Rohrschalldämpfer 160x1000 bis 10m;;51,56;
+20.53.04.0022.1;Rohrschalldämpfer 200x1000 bis 3,5m;ST;30,33;8
+20.53.04.0022.2;Rohrschalldämpfer 200x1000 bis 5,5m;;36,4;
+20.53.04.0022.3;Rohrschalldämpfer 200x1000 bis 10m;;51,56;
+20.53.04.0023.1;Rohrschalldämpfer 250x1000 bis 3,5m;ST;30,33;2
+20.53.04.0023.2;Rohrschalldämpfer 250x1000 bis 5,5m;;36,4;
+20.53.04.0023.3;Rohrschalldämpfer 250x1000 bis 10m;;51,56;
+20.54.01.0001.1;Luftleitung 0,7 - L1 bis 3,5m;m2;18,200000000000003;50
+20.54.01.0001.2;Luftleitung 0,7 - L1 bis 5,5m;;21,84;
+20.54.01.0001.3;Luftleitung 0,7 - L1 bis 10m;;30,94;
+20.54.01.0002.1;Luftleitung 0,7 - L2 bis 3,5m;m2;18,200000000000003;120
+20.54.01.0002.2;Luftleitung 0,7 - L2 bis 5,5m;;21,84;
+20.54.01.0002.3;Luftleitung 0,7 - L2 bis 10m;;30,94;
+20.54.01.0005.1;Luftleitung 0,9 - L3 bis 3,5m;m2;18,200000000000003;1680
+20.54.01.0005.2;Luftleitung 0,9 - L3 bis 5,5m;;21,84;
+20.54.01.0005.3;Luftleitung 0,9 - L3 bis 10m;;30,94;
+20.54.01.0006.1;Luftleitung 1,1 - L4 bis 3,5m;m2;18,200000000000003;770
+20.54.01.0006.2;Luftleitung 1,1 - L4 bis 5,5m;;21,84;
+20.54.01.0006.3;Luftleitung 1,1 - L4 bis 10m;;30,94;
+20.54.01.0007.1;Luftleitung 1,1 - L5 bis 3,5m;m2;18,200000000000003;1100
+20.54.01.0007.2;Luftleitung 1,1 - L5 bis 5,5m;;21,84;
+20.54.01.0007.3;Luftleitung 1,1 - L5 bis 10m;;30,94;
+20.54.01.0008.1;Formstück 0,7 - F1 bis 3,5m;m2;23,61764705882353;35
+20.54.01.0008.2;Formstück 0,7 - F1 bis 5,5m;;28,34;
+20.54.01.0008.3;Formstück 0,7 - F1 bis 10m;;40,15;
+20.54.01.0009.1;Formstück 0,7 - F2 bis 3,5m;m2;23,61764705882353;410
+20.54.01.0009.2;Formstück 0,7 - F2 bis 5,5m;;28,34;
+20.54.01.0009.3;Formstück 0,7 - F2 bis 10m;;40,15;
+20.54.01.0010.1;Formstück, 0,9 - F2 bis 3,5m;m2;23,61764705882353;110
+20.54.01.0010.2;Formstück, 0,9 - F2 bis 5,5m;;28,34;
+20.54.01.0010.3;Formstück, 0,9 - F2 bis 10m;;40,15;
+20.54.01.0011.1;Formstück, 0,9 - F3 bis 3,5m;m2;23,61764705882353;690
+20.54.01.0011.2;Formstück, 0,9 - F3 bis 5,5m;;28,34;
+20.54.01.0011.3;Formstück, 0,9 - F3 bis 10m;;40,15;
+20.54.01.0013.1;Formstück 1,1 - F5 bis 3,5m;m2;23,61764705882353;590
+20.54.01.0013.2;Formstück 1,1 - F5 bis 5,5m;;28,34;
+20.54.01.0013.3;Formstück 1,1 - F5 bis 10m;;40,15;
+20.54.02.0001.1;FabricAir Textilsystem, 9 m links bis 3,5m;ST;180;14
+20.54.02.0001.2;FabricAir Textilsystem, 9 m links bis 5,5m;;216;
+20.54.02.0001.3;FabricAir Textilsystem, 9 m links bis 10m;;306;
+20.54.02.0002;Montagematerialien ;ST;0;14
+20.54.02.0003.1;FabricAir Textilsystem, 9 m rechts 3,5m;ST;180;14
+20.54.02.0003.2;FabricAir Textilsystem, 9 m rechts 5,5m;;216;
+20.54.02.0003.3;FabricAir Textilsystem, 9 m rechts 10m;;306;
+20.54.02.0004;Montagematerialien ;ST;0;14
+20.54.02.0005.1;FabricAir Textilsystem, 168m northwest bis 3,5m;ST;3360;1
+20.54.02.0005.2;FabricAir Textilsystem, 168m northwest bis 5,5m;;4032;
+20.54.02.0005.3;FabricAir Textilsystem, 168m northwest bis 10m;;5712;
+20.54.02.0006;Montagematerialien;ST;0;1
+20.54.02.0007.1;FabricAir Textilsystem, 168m southwest bis 3,5m;ST;3360;1
+20.54.02.0007.2;FabricAir Textilsystem, 168m southwest bis 5,5m;;4032;
+20.54.02.0007.3;FabricAir Textilsystem, 168m southwest bis 10m;;5712;
+20.54.02.0008;Montagematerialien;ST;0;1
+20.54.02.0009.1;FabricAir Textilsystem, 168m northeast bis 3,5m;ST;3360;1
+20.54.02.0009.2;FabricAir Textilsystem, 168m northeast bis 5,5m;;4032;
+20.54.02.0009.3;FabricAir Textilsystem, 168m northeast bis 10m;;5712;
+20.54.02.0010;Montagematerialien;ST;0;1
+20.54.02.0011.1;FabricAir Textilsystem, 168m southeast bis 3,5m;ST;3360;1
+20.54.02.0011.2;FabricAir Textilsystem, 168m southeast bis 5,5m;;4032;
+20.54.02.0011.3;FabricAir Textilsystem, 168m southeast bis 10m;;5712;
+20.54.02.0012;Montagematerialien;ST;0;1
+20.54.02.0013.1;FabricAir Textilsystem, 5 m links bis 3,5m;ST;100;14
+20.54.02.0013.2;FabricAir Textilsystem, 5 m links bis 5,5m;;120;
+20.54.02.0013.3;FabricAir Textilsystem, 5 m links bis 10m;;170;
+20.54.02.0014;Montagematerialien;ST;0;14
+20.54.02.0015.1;FabricAir Textilsystem, 5 m links bis 3,5m;ST;100;14
+20.54.02.0015.2;FabricAir Textilsystem, 5 m links bis 5,5m;;120;
+20.54.02.0015.3;FabricAir Textilsystem, 5 m links bis 10m;;170;
+20.54.02.0016;Montagematerialien;ST;0;14
+20.54.02.0017.1;FabricAir Textilsystem, 96m northwest 3,5m;ST;1920;1
+20.54.02.0017.2;FabricAir Textilsystem, 96m northwest 5,5m;;2304;
+20.54.02.0017.3;FabricAir Textilsystem, 96m northwest 10m;;3264;
+20.54.02.0018;Montagematerialien;ST;0;1
+20.54.02.0019.1;FabricAir Textilsystem, 96m northeast 3,5m ;ST;1920;1
+20.54.02.0019.2;FabricAir Textilsystem, 96m northeast 5,5m;;2304;
+20.54.02.0019.3;FabricAir Textilsystem, 96m northeast 10m;;3264;
+20.54.02.0020;Montagematerialien;ST;0;1
+20.54.02.0021.1;FabricAir Textilsystem, 72m southwest bis 3,5m;ST;1440;1
+20.54.02.0021.2;FabricAir Textilsystem, 72m southwest bis 5,5m;;1728;
+20.54.02.0021.3;FabricAir Textilsystem, 72m southwest bis 10m;;2448;
+20.54.02.0022;Montagematerialien;ST;0;1
+20.54.02.0023.1;FabricAir Textilsystem, 72m southeast bis 3,5m;ST;1440;1
+20.54.02.0023.2;FabricAir Textilsystem, 72m southeast bis 5,5m;;1728;
+20.54.02.0023.3;FabricAir Textilsystem, 72m southeast bis 10m;;2448;
+20.54.02.0024;Montagematerialien;ST;0;1
+20.54.03.0001.1;FabricAir Textilsystem, Ø600mm bis 3,5m;m;20;620
+20.54.03.0001.2;FabricAir Textilsystem, Ø600mm bis 5,5m;;24;
+20.54.03.0001.3;FabricAir Textilsystem, Ø600mm bis 10m;;34;
+20.54.03.0002;Montagematerialien;ST;0;31
+20.54.04.0001.1;Wickelfalzrohr verz.0,45 DN100 bis 3,5m;m;11,917647058823531;115
+20.54.04.0001.2;Wickelfalzrohr verz.0,45 DN100 bis 5,5m;;14,3;
+20.54.04.0001.3;Wickelfalzrohr verz.0,45 DN100 bis 10m;;20,26;
+20.54.04.0002.1;Wickelfalzrohr verz.0,45 DN125 bis 3,5m;m;11,917647058823531;65
+20.54.04.0002.2;Wickelfalzrohr verz.0,45 DN125 bis 5,5m;;14,3;
+20.54.04.0002.3;Wickelfalzrohr verz.0,45 DN125 bis 10m;;20,26;
+20.54.04.0003.1;Wickelfalzrohr verz.0,45 DN160 bis 3,5m;m;14,084117647058825;5650
+20.54.04.0003.2;Wickelfalzrohr verz.0,45 DN160 bis 5,5m;;16,9;
+20.54.04.0003.3;Wickelfalzrohr verz.0,45 DN160 bis 10m;;23,94;
+20.54.04.0004.1;Wickelfalzrohr verz.0,6 DN200 bis 3,5m;m;16,25294117647059;3500
+20.54.04.0004.2;Wickelfalzrohr verz.0,6 DN200 bis 5,5m;;19,5;
+20.54.04.0004.3;Wickelfalzrohr verz.0,6 DN200 bis 10m;;27,63;
+20.54.04.0005.1;Wickelfalzrohr verz.0,6 DN250 bis 3,5m;m;17,329411764705885;95
+20.54.04.0005.2;Wickelfalzrohr verz.0,6 DN250 bis 5,5m;;20,8;
+20.54.04.0005.3;Wickelfalzrohr verz.0,6 DN250 bis 10m;;29,46;
+20.54.04.0006.1;Wickelfalzrohr verz.0,7 DN280 bis 3,5m;m;19,5;2050
+20.54.04.0006.2;Wickelfalzrohr verz.0,7 DN280 bis 5,5m;;23,4;
+20.54.04.0006.3;Wickelfalzrohr verz.0,7 DN280 bis 10m;;33,15;
+20.54.04.0007.1;Wickelfalzrohr verz.0,7 DN315 bis 3,5m;m;19,5;3600
+20.54.04.0007.2;Wickelfalzrohr verz.0,7 DN315 bis 5,5m;;23,4;
+20.54.04.0007.3;Wickelfalzrohr verz.0,7 DN315 bis 10m;;33,15;
+20.54.04.0009.1;Wickelfalzrohr verz.0,7 DN400 bis 3,5m;m;23,82941176470588;610
+20.54.04.0009.2;Wickelfalzrohr verz.0,7 DN400 bis 5,5m ;;28,6;
+20.54.04.0009.3;Wickelfalzrohr verz.0,7 DN400 bis 10m ;;40,51;
+20.54.04.0012.1;Wickelfalzrohr verz.0,7 DN560 bis 3,5m;m;34,67058823529412;30
+20.54.04.0012.2;Wickelfalzrohr verz.0,7 DN560 bis 5,5m;;41,6;
+20.54.04.0012.3;Wickelfalzrohr verz.0,7 DN560 bis 10m;;58,94;
+20.54.09.0001.1;Flex.Rohre Aluminium DN100 bis 3,5m;m;11,917647058823531;35
+20.54.09.0001.2;Flex.Rohre Aluminium DN100 bis 5,5m;;14,3;
+20.54.09.0001.3;Flex.Rohre Aluminium DN100 bis 10m;;20,26;
+20.54.09.0002.1;Flex.Rohre Aluminium DN125 bis 3,5m;m;11,917647058823531;15
+20.54.09.0002.2;Flex.Rohre Aluminium DN125 bis 5,5m;;14,3;
+20.54.09.0002.3;Flex.Rohre Aluminium DN125 bis 10m;;20,26;
+20.54.09.0003.1;Flex.Rohre Aluminium DN160 bis 3,5m;m;14,082352941176472;5
+20.54.09.0003.2;Flex.Rohre Aluminium DN160 bis 5,5m;;16,9;
+20.54.09.0003.3;Flex.Rohre Aluminium DN160 bis 10m;;23,94;
+20.54.09.0004.1;Flex.Rohre Aluminium DN200 bis 3,5m ;m;16,25294117647059;15
+20.54.09.0004.2;Flex.Rohre Aluminium DN200 bis 5,5m ;;19,5;
+20.54.09.0004.3;Flex.Rohre Aluminium DN200 bis 10m ;;27,63;
+20.54.14.0001.1;WFR Bogen D100 bis 3,5m;ST;11,92;125
+20.54.14.0001.2;WFR Bogen D100 bis 5,5m;;14,3;
+20.54.14.0001.3;WFR Bogen D100 bis 10m;;20,26;
+20.54.14.0002.1;WFR Bogen D125 bis 3,5m;ST;11,92;75
+20.54.14.0002.2;WFR Bogen D125 bis 5,5m;;14,3;
+20.54.14.0002.3;WFR Bogen D125 bis 10m;;20,26;
+20.54.14.0003.1;WFR Bogen D160 bis 3,5m;ST;14,08;775
+20.54.14.0003.2;WFR Bogen D160 bis 5,5m;;16,9;
+20.54.14.0003.3;WFR Bogen D160 bis 10m;;23,94;
+20.54.14.0004.1;WFR Bogen D200 bis 3,5m;ST;16,25;590
+20.54.14.0004.2;WFR Bogen D200 bis 5,5m;;19,5;
+20.54.14.0004.3;WFR Bogen D200 bis 10m;;27,63;
+20.54.14.0005.1;WFR Bogen D250 bis 3,5m;ST;17,33;30
+20.54.14.0005.2;WFR Bogen D250 bis 5,5m;;20,8;
+20.54.14.0005.3;WFR Bogen D250 bis 10m;;29,46;
+21.01.NT.0001.2 ;WFR Bogen D280 bis 3,5m;;19,5;
+21.01.NT.0001.3 ;WFR Bogen D280 bis 5,5m;;23,4;
+21.01.NT.0001.4;WFR Bogen D280 bis 10m;;33,15;
+21.01.NT.0001.5;WFR Bogen D315 bis 3,5m;;19,5;
+21.01.NT.0001.6;WFR Bogen D315 bis 5,5m;;23,4;
+21.01.NT.0001.7;WFR Bogen D315 bis 10m;;33,15;
+20.54.14.0008.1;WFR Bogen D400 bis 3,5m;ST;23,83;295
+20.54.14.0008.2;WFR Bogen D400 bis 5,5m;;28,6;
+20.54.14.0008.3;WFR Bogen D400 bis 10m;;40,51;
+21.01.NT.0001.8;WFR Bogen D500 bis 3,5m;;29,25;
+21.01.NT.0001.9;WFR Bogen D500 bis 5,5m;;35,1;
+21.01.NT.0001.10;WFR Bogen D500 bis 10m;;49,73;
+20.54.14.0015.1;WFR T-Stück D100 bis 3,5m;ST;11,92;25
+20.54.14.0015.2;WFR T-Stück D100 bis 5,5m;;14,3;
+20.54.14.0015.3;WFR T-Stück D100 bis 10m;;20,26;
+20.54.14.0016.1;WFR T-Stück D125 bis 3,5m;ST;11,92;15
+20.54.14.0016.2;WFR T-Stück D125 bis 5,5m;;14,3;
+20.54.14.0016.3;WFR T-Stück D125 bis 10m;;20,26;
+20.54.14.0017.1;WFR T-Stück D160 bis 3,5m;ST;14,08;45
+20.54.14.0017.2;WFR T-Stück D160 bis 5,5m;;16,9;
+20.54.14.0017.3;WFR T-Stück D160 bis 10m;;23,94;
+20.54.14.0018.1;WFR T-Stück D200 bis 3,5m;ST;16,25;445
+20.54.14.0018.2;WFR T-Stück D200 bis 5,5m;;19,5;
+20.54.14.0018.3;WFR T-Stück D200 bis 10m;;27,63;
+20.54.14.0019.1;WFR T-Stück D250 bis 3,5m;ST;17,33;35
+20.54.14.0019.2;WFR T-Stück D250 bis 5,5m;;20,8;
+20.54.14.0019.3;WFR T-Stück D250 bis 10m;;29,46;
+20.54.14.0020.1;WFR T-Stück D280 bis 3,5m;ST;19,5;65
+20.54.14.0020.2;WFR T-Stück D280 bis 5,5m;;23,4;
+20.54.14.0020.3;WFR T-Stück D280 bis 10m;;33,15;
+20.54.14.0021.1;WFR T-Stück D315 bis 3,5m;ST;19,5;125
+20.54.14.0021.2;WFR T-Stück D315 bis 5,5m;;23,4;
+20.54.14.0021.3;WFR T-Stück D315 bis 10m;;33,15;
+20.54.14.0022.1;WFR T-Stück D400 bis 3,5m;ST;23,83;65
+20.54.14.0022.2;WFR T-Stück D400 bis 5,5m;;28,6;
+20.54.14.0022.3;WFR T-Stück D400 bis 10m;;40,51;
+20.54.14.0024.1;WFR T-Stück D500 bis 3,5m;ST;29,25;35
+20.54.14.0024.2;WFR T-Stück D500 bis 5,5m;;35,1;
+20.54.14.0024.3;WFR T-Stück D500 bis 10m;;49,73;
+20.54.14.0028.1;WFR Reduktion D125 bis 3,5m;ST;11,92;25
+20.54.14.0028.2;WFR Reduktion D125 bis 5,5m;;14,3;
+20.54.14.0028.3;WFR Reduktion D125 bis 10m;;20,26;
+20.54.14.0029.1;WFR Reduktion D160 bis 3,5m;ST;14,08;525
+20.54.14.0029.2;WFR Reduktion D160 bis 5,5m;;16,9;
+20.54.14.0029.3;WFR Reduktion D160 bis 10m;;23,94;
+20.54.14.0030.1;WFR Reduktion D200 bis 3,5m;ST;16,25;125
+20.54.14.0030.2;WFR Reduktion D200 bis 5,5m;;19,5;
+20.54.14.0030.3;WFR Reduktion D200 bis 10m;;27,63;
+20.54.14.0031.1;WFR Reduktion D250 bis 3,5m;ST;17,33;15
+20.54.14.0031.2;WFR Reduktion D250 bis 5,5m;;20,8;
+20.54.14.0031.3;WFR Reduktion D250 bis 10m;;29,46;
+20.54.14.0032.1;WFR Reduktion D280 bis 3,5m;ST;19,5;65
+20.54.14.0032.2;WFR Reduktion D280 bis 5,5m ;;23,4;
+20.54.14.0032.3;WFR Reduktion D280 bis 10m;;33,15;
+20.54.14.0033.1;WFR Reduktion D315 bis 3,5m;ST;19,5;65
+20.54.14.0033.2;WFR Reduktion D315 bis 5,5m;;23,4;
+20.54.14.0033.3;WFR Reduktion D315 bis 10m;;33,15;
+20.54.14.0034.1;WFR Reduktion D400 bis 3,5m;ST;23,83;125
+20.54.14.0034.2;WFR Reduktion D400 bis 5,5m;;28,6;
+20.54.14.0034.3;WFR Reduktion D400 bis 10m;;40,51;
+20.54.14.0036.1;WFR Reduktion D560 bis 3,5m;ST;34,67;65
+20.54.14.0036.2;WFR Reduktion D560 bis 5,5m;;41,6;
+20.54.14.0036.3;WFR Reduktion D560 bis 3,5m;;58,94;
+20.54.14.0043.1;WFR Muffe D100 bis 3,5m;ST;5,96;5
+20.54.14.0043.2;WFR Muffe D100 bis 5,5m;;7,15;
+20.54.14.0043.3;WFR Muffe D100 bis 10m;;10,13;
+20.54.14.0044.1;WFR Muffe D125 bis 3,5m;ST;5,96;10
+20.54.14.0044.2;WFR Muffe D125 bis 5m;;7,15;
+20.54.14.0044.3;WFR Muffe D125 bis 10m;;10,13;
+20.54.14.0045.1 ;WFR Muffe D160 bis 3,5m;ST;7,04;15
+20.54.14.0045.2;WFR Muffe D160 bis 5,5m;;8,45;
+20.54.14.0045.3;WFR Muffe D160 bis 10m;;11,97;
+20.54.14.0046.1;WFR Muffe D200 bis 3,5m;ST;8,13;115
+20.54.14.0046.2;WFR Muffe D200 bis 5,5m;;9,76;
+20.54.14.0046.3;WFR Muffe D200 bis 10m;;13,82;
+20.54.14.0047.1;WFR Muffe D250 bis 3,5m;ST;8,76;10
+20.54.14.0047.2;WFR Muffe D250 bis 5,5m;;10,51;
+20.54.14.0047.3;WFR Muffe D250 bis 10m;;14,89;
+20.54.14.0048.1;WFR Muffe D280 bis 3,5m;ST;9,75;65
+20.54.14.0048.2;WFR Muffe D280 bis 5,5m;;11,7;
+20.54.14.0048.3;WFR Muffe D280 bis 10m;;16,58;
+20.54.14.0049.1;WFR Muffe D315 bis 3,5m ;ST;9,75;65
+20.54.14.0049.2;WFR Muffe D315 bis 5,5m ;;11,7;
+20.54.14.0049.3;WFR Muffe D315 bis 10m ;;16,58;
+20.54.14.0050.1;WFR Muffe D400 bis 3,5m;ST;11,92;125
+20.54.14.0050.2;WFR Muffe D400 bis 5,5m;;14,3;
+20.54.14.0050.3;WFR Muffe D400 bis 10m;;20,26;
+20.54.14.0053.1;WFR Muffe D560 bis 3,5m;ST;17,36;65
+20.54.14.0053.2;WFR Muffe D560 bis 5,5m;;20,83;
+20.54.14.0053.3;WFR Muffe D560 bis 10m;;29,51;
+20.54.14.0056.1;WFR Endkappe D160 bis 3,5m;ST;21,12;740
+20.54.14.0056.2;WFR Endkappe D160 bis 5,5m;;25,34;
+20.54.14.0056.3;WFR Endkappe D160 bis 10m;;35,9;
+20.54.14.0057.1;WFR Endkappe D280 bis 3,5m;ST;29,25;65
+20.54.14.0057.2;WFR Endkappe D280 bis 5,5m;;35,1;
+20.54.14.0057.3;WFR Endkappe D280 bis 10m;;49,73;
+20.54.14.0058.1;WFR Endkappe D315 bis 3,5m;ST;29,25;65
+20.54.14.0058.2;WFR Endkappe D315 bis 5,5m;;35,1;
+20.54.14.0058.3;WFR Endkappe D315 bis 10m;;49,73;
+20.54.14.0061.1;WFR Sattelstutzen D160 bis 3,5m;ST;19,5;5
+20.54.14.0061.2;WFR Sattelstutzen D160 bis 5,5m;;23,4;
+20.54.14.0061.3;WFR Sattelstutzen D160 bis 10m;;33,15;
+20.54.14.0062.1;WFR Sattelstutzen D400 bis 3,5m;ST;29,25;125
+20.54.14.0062.2;WFR Sattelstutzen D400 bis 5,5m;;35,1;
+20.54.14.0062.3;WFR Sattelstutzen D400 bis 10m;;49,73;
+20.55.01.0001.1;Volumenstromregler rund  DN 100 bis 3,5m;ST;29,8;14
+20.55.01.0001.2;Volumenstromregler rund  DN 100 bis 5,5m;;35,76;
+20.55.01.0001.3;Volumenstromregler rund  DN 100 bis 10m;;50,66;
+20.55.01.0003.1;Volumenstromregler rund  DN 160 bis 3,5m ;ST;35,2;2
+20.55.01.0003.2;Volumenstromregler rund  DN 160 bis 5,5m ;;42,24;
+20.55.01.0003.3;Volumenstromregler rund  DN 160 bis 10m ;;59,84;
+21.01.NT.0001.12;Volumenstromregler rund  DN 400 bis 3,5m ;ST;59,58;2
+21.01.NT.0001.13;Volumenstromregler rund  DN 400 bis 5,5m ;;71,5;
+21.01.NT.0001.14;Volumenstromregler rund  DN 400 bis 10m ;;101,28;
+20.55.01.0010.1;Volumenstromreg.konstant eckig 300 x 200 bis 3,5m;ST;59,58;2
+20.55.01.0010.2;Volumenstromreg.konstant eckig 300 x 200 bis 5,5m;;71,5;
+20.55.01.0010.3;Volumenstromreg.konstant eckig 300 x 200 bis 10m;;101,29;
+21.01.NT.0001.15;Volumenstromreg.konstant eckig 1000 x 600 bis 3,5m;ST;140,83;2
+21.01.NT.0001.16;Volumenstromreg.konstant eckig  1000 x 600 bis 5,5m;;169;
+21.01.NT.0001.17;Volumenstromreg.konstant eckig  1000 x 600 bis 10m;;239,41;
+20.55.04.0001.1;Brandschutzkl.eckig Federrückl.250 x 300 bis 3,5m;ST;108,33;2
+20.55.04.0001.2;Brandschutzkl.eckig Federrückl.250 x 300 bis 5,5m;;130;
+20.55.04.0001.3;Brandschutzkl.eckig Federrückl.250 x 300 bis 10m;;184,16;
+20.55.04.0002.1;Brandschutzkl.eckig Federrückl.300 x 300 bis 3,5m;ST;108,33;2
+20.55.04.0002.2;Brandschutzkl.eckig Federrückl.300 x 300 bis 5,5m;;130;
+20.55.04.0002.3;Brandschutzkl.eckig Federrückl.300 x 300 bis 10m;;184,16;
+20.55.04.0003.1;Brandschutzkl.eckig Federrückl.400 x 300 bis 3,5m;ST;108,33;2
+20.55.04.0003.2;Brandschutzkl.eckig Federrückl.400 x 300 bis 5,5m;;130;
+20.55.04.0003.3;Brandschutzkl.eckig Federrückl.400 x 300 bis 10m;;184,16;
+20.55.04.0008.1;Brandschutzklappe rund Federrückl.DN 100 bis 3,5m;ST;48,75;2
+20.55.04.0008.2;Brandschutzklappe rund Federrückl.DN 100 bis 5,5m;;58,5;
+20.55.04.0008.3;Brandschutzklappe rund Federrückl.DN 100 bis 10m;;82,88;
+20.55.04.0009.1;Brandschutzklappe rund Federrückl.DN 125 bis 3,5m;ST;48,75;4
+20.55.04.0009.2;Brandschutzklappe rund Federrückl.DN 125 bis 5,5m;;58,5;
+20.55.04.0009.3;Brandschutzklappe rund Federrückl.DN 125 bis 10m;;82,88;
+20.55.04.0010.1;Brandschutzklappe rund Federrückl.DN 160 bis 3,5m;ST;48,75;8
+20.55.04.0010.2;Brandschutzklappe rund Federrückl.DN 160 bis 5,5m;;58,5;
+20.55.04.0010.3;Brandschutzklappe rund Federrückl.DN 160 bis 10m;;82,88;
+20.55.04.0011.1;Brandschutzklappe rund Federrückl.DN 200 bis 3,5m;ST;54,17;2
+20.55.04.0011.2;Brandschutzklappe rund Federrückl.DN 200 bis 5,5m;;65;
+20.55.04.0011.3;Brandschutzklappe rund Federrückl.DN 200 bis 10m;;92,09;
+20.55.04.0012.1;Brandschutzklappe rund Federrückl.DN 250 bis 3,5m;ST;59,58;8
+20.55.04.0012.2;Brandschutzklappe rund Federrückl.DN 250 bis 5,5m;;71,5;
+20.55.04.0012.3;Brandschutzklappe rund Federrückl.DN 250 bis 10m;;101,29;
+20.55.06.0001.1;Drosselklappe rund Stahlblech DN 100 bis 3,5m;ST;29,8;50
+20.55.06.0001.2;Drosselklappe rund Stahlblech DN 100 bis 5,5m;;35,76;
+20.55.06.0001.3;Drosselklappe rund Stahlblech DN 100 bis 10m;;50,66;
+20.55.06.0002.1;Drosselklappe rund Stahlblech DN 125 bis 3,5m;ST;29,8;15
+20.55.06.0002.2;Drosselklappe rund Stahlblech DN 125 bis 5,5m;;35,76;
+20.55.06.0002.3;Drosselklappe rund Stahlblech DN 125 bis 10m;;50,66;
+20.55.06.0004.1;Drosselklappe rund Stahlblech DN 200 bis 3,5m;ST;40,63;10
+20.55.06.0004.2;Drosselklappe rund Stahlblech DN 200 bis 5,5m;;48,76;
+20.55.06.0004.3;Drosselklappe rund Stahlblech DN 200 bis 10m;;69,07;
+20.55.08.0001.1;Absperr-Jalousiekl.luftdicht 180 x 200 bis 3,5m;ST;59,58;410
+20.55.08.0001.2;Absperr-Jalousiekl.luftdicht 180 x 200 bis 5,5m;;71,5;
+20.55.08.0001.3;Absperr-Jalousiekl.luftdicht 180 x 200 bis 10m;;101,29;
+20.55.08.0002.1;Absperr-Jalousiekl.luftdicht 345 x 400 bis 3,5m;ST;81,25;120
+20.55.08.0002.2;Absperr-Jalousiekl.luftdicht 345 x 400 bis 5,5m;;97,5;
+20.55.08.0002.3;Absperr-Jalousiekl.luftdicht 345 x 400 bis 10m;;138,13;
+20.55.08.0003.1;Absperr-Jalousiekl.luftdicht 345 x 600 bis 3,5m;ST;81,25;60
+20.55.08.0003.2;Absperr-Jalousiekl.luftdicht 345 x 600 bis 5,5m;;97,5;
+20.55.08.0003.3;Absperr-Jalousiekl.luftdicht 345 x 600 bis 10m;;138,13;
+20.55.08.0004.1;Absperr-Jalousiekl.luftdicht 550 x 630 bis 3,5m;ST;97,36;54
+20.55.08.0004.2;Absperr-Jalousiekl.luftdicht 550 x 630 bis 5,5m;;116,83;
+20.55.08.0004.3;Absperr-Jalousiekl.luftdicht 550 x 630 bis 10m;;165,51;
+21.01.NT.0001.18;Absperr-Jalousiekl.luftdicht 700 x 700 bis 3,5m;ST;97,5;54
+21.01.NT.0001.19;Absperr-Jalousiekl.luftdicht 700 x 700 bis 5,5m;;117;
+21.01.NT.0001.20;Absperr-Jalousiekl.luftdicht 700 x 700 bis 10m;;165,75;
+21.01.NT.0001.21;Absperr-Jalousiekl.luftdicht 1000 x 600 bis 3,5m;ST;140,83;54
+21.01.NT.0001.22;Absperr-Jalousiekl.luftdicht 1000 x 600 bis 5,5m;;169;
+21.01.NT.0001.23;Absperr-Jalousiekl.luftdicht 1000 x 600 bis 10m;;239,41;
+21.01.NT.0001.24;Absperr-Jalousiekl.luftdicht 1800 x 600 bis 3,5m;ST;205,83;54
+21.01.NT.0001.25;Absperr-Jalousiekl.luftdicht 1800 x 600 bis 5,5m;;247;
+21.01.NT.0001.26;Absperr-Jalousiekl.luftdicht 1800 x 600 bis 10m;;349,91;
+20.56.01.0001.1;Wetterschutzgitter, 200x165 bis 3,5m;Stk;70,42;4
+20.56.01.0001.2;Wetterschutzgitter, 200x165 bis 5,5m;;84,5;
+20.56.01.0001.3;Wetterschutzgitter, 200x165 bis 10m;;119,71;
+20.56.01.0002.1;Wetterschutzgitter, 400x165 bis 3,5m ;Stk;97,5;6
+20.56.01.0002.2;Wetterschutzgitter, 400x165 bis 5,5m ;;117;
+20.56.01.0002.3;Wetterschutzgitter, 400x165 bis 10m ;;165,75;
+20.56.04.0006.1;Lüftungsg. Einbau Rechteckkanal 1000/  700 bis 3,5m;ST;65;24
+20.56.04.0006.2;Lüftungsg. Einbau Rechteckkanal 1000/  700 bis 5,5m;;78;
+20.56.04.0006.3;Lüftungsg. Einbau Rechteckkanal 1000/  700 bis 10m;;110,5;
+20.56.04.0007.1;Lüftungsg. Einbau Rechteckkanal 1800/  800 bis 3,5m;ST;130;2
+20.56.04.0007.2;Lüftungsg. Einbau Rechteckkanal 1800/  800 bis 5,5m;;156;
+20.56.04.0007.3;Lüftungsg. Einbau Rechteckkanal 1800/  800 bis 10m;;221;
+20.56.04.0012.1;Lüftungsg. Einbau Rundkanal 825/ 125 bis 3,5m;ST;27,5;1280
+20.56.04.0012.2;Lüftungsg. Einbau Rundkanal 825/ 125 bis 5,5m;;33;
+20.56.04.0012.3;Lüftungsg. Einbau Rundkanal 825/ 125 bis 10m;;46,75;
+20.56.05.0001.1;Zuluftventil 100 bis 3,5m;ST;21,67;55
+20.56.05.0001.2;Zuluftventil 100 bis 5,5m;;26;
+20.56.05.0001.3;Zuluftventil 100 bis 10m;;36,84;
+20.56.05.0002.1;Zuluftventil 125 bis 3,5m;ST;21,67;2
+20.56.05.0002.2;Zuluftventil 125 bis 5,5m;;26;
+20.56.05.0002.3;Zuluftventil 125 bis 10m;;36,84;
+20.56.05.0003.1;Zuluftventil 160 bis 3,5m;ST;28,17;2
+20.56.05.0003.2;Zuluftventil 160 bis 5,5m;;33,8;
+20.56.05.0003.3;Zuluftventil 160 bis 10m;;47,89;
+20.56.05.0004.1;Abluftventil 100 bis 3,5m ;ST;21,67;2
+20.56.05.0004.2;Abluftventil 100 bis 5,5m ;;26;
+20.56.05.0004.3;Abluftventil 100 bis 10m ;;36,84;
+20.56.05.0005.1;Abluftventil 125 bis 3,5m;ST;21,67;12
+20.56.05.0005.2;Abluftventil 125 bis 5,5m;;26;
+20.56.05.0005.3;Abluftventil 125 bis 10m;;36,84;
+20.56.05.0006.1;Abluftventil 160 bis 3,5m;ST;28,17;2
+20.56.05.0006.2;Abluftventil 160 bis 5,5m;;33,8;
+20.56.05.0006.3;Abluftventil 160 bis 10m;;47,89;
+20.56.07.0002.1;Drallauslass ZUL VDW 400/16 bis 3,5m;ST;65;21
+20.56.07.0002.2;Drallauslass ZUL VDW 400/16 bis 5,5m;;78;
+20.56.07.0002.3;Drallauslass ZUL VDW 400/16 bis 10m;;110,5;
+20.56.07.0009.1;Drallauslass ABL VDW 400/16 bis 3,5m;ST;65;10
+20.56.07.0009.2;Drallauslass ABL VDW 400/16 bis 5,5m;;78;
+20.56.07.0009.3;Drallauslass ABL VDW 400/16 bis 10m;;110,5;
+20.90.02.0200;Leitender-, Obermonteur HLKS.;h;65;10
+20.90.02.0400;Monteur HLKS.;h;65;10
+20.90.02.0500;Hilfsmonteur HLKS.;h;65;10
+21.01.NT.0001.1;NT 1 - Löcher Schneiden in das Resen Deck - DN 210 - 1,5mm Metall + 18mm Holzplatte;Stk;140;
+21.01.NT.0001.11 ;NT 11 Auschnitte RD;;65;
+21.01.NT.0001.30;Sonderkonstruktion ;Stk;25;
+21.01.NT.0001.31;VSR DN 200 konstant ;Stk;42,5;
+21.01.NT.0001.32;VSR 600x300;Stk;102,96;
+21.01.NT.0001.33;SD 600x300;Stk;111,16;
+21.01.NT.0001.34;Bundkragen DN 200;Stk;27,5;
+21.01.NT.0001.35;VSR 300x200;Stk;57,2;
+21.01.NT.0001.36;SD 300x200 ;Stk;61,76;
+21.01.NT.0001.37;VSR 600x400;Stk;114,4;
+21.01.NT.0001.38;SD 600x400;Stk;123,52;
+21.01.NT.0001.39;VSR 600x200;Stk;91,52;
+21.01.NT.0001.40;SD 600x200;Stk;98,81;
+21.01.NT.0001.41;VSR 800x400;Stk;137,28;
+21.01.NT.0001.42;SD 800x400;Stk;148,22;
+21.01.NT.0001.43;VSR 500x200;Stk;80,08;
+21.01.NT.0001.44;SD 500x200;Stk;86,46;
+21.01.NT.0001.45;VSR 700x400;Stk;125,84;
+21.01.NT.0001.46;SD 700x400;Stk;135,87;
+21.01.NT.0001.47;Bundkragen DN 250;Stk;29,5;
+21.01.NT.0001.48;Bundkragen DN 100;Stk;23,4;
+21.01.NT.0001.49;Bundkragen DN 315;Stk;33,5;

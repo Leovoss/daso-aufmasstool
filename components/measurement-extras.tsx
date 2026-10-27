@@ -1,0 +1,11 @@
+'use client';
+import {Plus,Clock} from 'lucide-react';
+import {Button} from '@/components/ui/button';
+import {Badge} from '@/components/ui/badge';
+import {money,reportDateRange,reportTotals} from '@/lib/business';
+import {timePricingComplete,timeRevenueAvailable} from '@/lib/time-reports';
+import type {Project,Report} from '@/lib/types';
+
+export function MeasurementExtras({report,extras,project,disabled,onOpen}:{report:Report;extras:Report[];project:Project;disabled:boolean;onOpen:(extra?:Report)=>void}){
+ return <section className="measurement-extras"><div className="section-title"><div><h3><Clock size={17}/> Mehraufwandstunden im Aufmaß</h3><p>Besetzung übernehmen, Stunden je Mitarbeiter erfassen und anschließend hier fortfahren. Die Mehraufwandberichte werden dem Kunden-PDF beigefügt.</p></div>{report.state==='draft'&&<Button type="button" variant="outline" disabled={disabled||!report.team} onClick={()=>onOpen()}><Plus/>Mehraufwandstunden hinzufügen</Button>}</div>{extras.length>0&&<div className="linked-extra-list">{extras.map(extra=><article key={extra.id}><div><strong>{reportDateRange(extra)} · {extra.team}</strong><small>Mehraufwand · {extra.timeSheet?.entries.length||0} Mitarbeiterzeilen</small></div><Badge className={'status '+(extra.state==='ready'?'violet':'grey')}>{extra.state==='ready'?'Fertig':'Entwurf'}</Badge><div className="linked-extra-revenue"><small>Umsatz Mehraufwand</small><strong>{timeRevenueAvailable(extra)?money(reportTotals([extra],project.factor).employee):'—'}</strong>{!timePricingComplete(extra)&&<small>Angaben ergänzen</small>}</div><Button type="button" variant="outline" disabled={disabled} onClick={()=>onOpen(extra)}>Stunden öffnen</Button></article>)}</div>}{extras.some(r=>r.state==='draft')&&<p className="message error">Vor dem gemeinsamen Kunden-PDF und Versand bitte die verknüpften Mehraufwandberichte fertigstellen.</p>}{extras.length>0&&<p className="people-hint">Aufmaß und Mehraufwand bleiben einzeln prüfbar. Die folgende Auswertung enthält beide Leistungen. Die im Aufmaß eingegebenen Nachunternehmerkosten gelten einschließlich Mehraufwand. Verknüpfte Mehraufwandstunden erhöhen nur den Umsatz, nicht die Kosten.</p>}</section>;
+}
