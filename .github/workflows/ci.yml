@@ -23,6 +23,8 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      - run: sudo apt-get install -y poppler-utils
+
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm test

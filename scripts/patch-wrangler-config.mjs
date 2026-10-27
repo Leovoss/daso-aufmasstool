@@ -13,6 +13,7 @@ config.d1_databases = [
   },
 ];
 config.r2_buckets = [{ binding: "BUCKET", bucket_name: "daso-aufmass-files" }];
+config.preview_urls = false;
 
 writeFileSync(path, JSON.stringify(config));
 console.log("Patched dist/server/wrangler.json with production bindings.");
