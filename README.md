@@ -47,13 +47,12 @@ Roles come from the Montageplanung users table. `access:<email>` records in `rec
 ## Build and deploy
 
 The Worker `daso-aufmasstool` is connected to this repository through Cloudflare
-Workers Builds. Build settings:
+Workers Builds. The defaults work as they are: leave the Build command empty and
+keep the Deploy command `npx wrangler deploy`.
 
-- Build command: `pnpm run build`
-- Deploy command: `npx wrangler deploy`
-
-The build writes `dist/server/wrangler.json` with the production bindings from
-`vite.config.ts`, and `wrangler deploy` follows `.wrangler/deploy/config.json` to it.
+`wrangler.jsonc` holds the bindings and runs `pnpm run build` before deploying, so
+no framework detection happens. The build writes `dist/server/wrangler.json`,
+which the Vite plugin derives from `wrangler.jsonc`.
 `.github/workflows/ci.yml` runs type-check and tests on every push.
 
 ## Customer link

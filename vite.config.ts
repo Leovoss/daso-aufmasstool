@@ -18,25 +18,7 @@ export default defineConfig(async () => {
       cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
         inspectorPort: false,
-        config: {
-          name: "daso-aufmasstool",
-          main: "vinext/server/fetch-handler",
-          preview_urls: false,
-          compatibility_flags: ["nodejs_compat"],
-          d1_databases: [
-            {
-              binding: "DB",
-              database_name: "daso-aufmass-eu",
-              database_id: "b7dcd995-d426-4809-bb1f-60ffe3d1513b",
-            },
-            {
-              binding: "PLAN_DB",
-              database_name: "daso-montageplanung",
-              database_id: "42f5d224-bb84-4fd2-a1f8-d6abfda88956",
-            },
-          ],
-          r2_buckets: [{ binding: "BUCKET", bucket_name: "daso-aufmass-files-eu" }],
-        },
+        config: { main: "vinext/server/fetch-handler" },
       }),
     ],
   };
