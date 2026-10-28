@@ -49,6 +49,7 @@ export default function Portal(){
     <button className="portal-button" disabled={busy||invalid||!name.trim()||!confirmed||(changes.length>0&&!note.trim())} onClick={submit}>{busy?'Wird gesendet ...':changes.length?'Korrektur absenden':'Mengen bestätigen'}</button>
     <p className="portal-meta">Gültig bis {dateLabel(view.expiresAt)}. Die Rückmeldung kann nur einmal abgegeben werden.</p>
    </>}
+   <p className="portal-meta"><a href="/p/datenschutz">Datenschutz</a></p>
   </section>
  </main>;
 }

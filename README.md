@@ -82,5 +82,5 @@ pnpm run db:generate
 wrangler d1 execute DB --remote --config dist/server/wrangler.json --file drizzle/<migration>.sql
 ```
 
-The database `daso-aufmass` is separate from Montageplanung. Apply
+The database `daso-aufmass-eu` (D1) and the bucket `daso-aufmass-files-eu` (R2) are in Western Europe and separate from Montageplanung. Apply
 `drizzle/0000_hard_bill_hollister.sql` once to a new, empty database.
