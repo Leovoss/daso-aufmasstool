@@ -37,7 +37,7 @@ export default function Portal(){
       {rows.map(row=>{const value=parsed[key(row)],changed=value!==null&&value!==row.quantity;return <div key={key(row)} role="row" className={'portal-row'+(changed?' changed':'')}>
        <strong>{row.number}</strong><span>{row.description}</span>
        <span className="num">{changed?<s>{qty2(row.quantity)}</s>:qty2(row.quantity)} {row.unit}</span>
-       <span className="num"><input aria-label={'Menge Position '+row.number} inputMode="decimal" value={input[key(row)]??''} placeholder={qty2(row.quantity)} aria-invalid={value===null} onChange={e=>setInput(x=>({...x,[key(row)]:e.target.value}))}/>
+       <span className="num"><input aria-label={'Menge Position '+row.number} inputMode="decimal" value={input[key(row)]??qty2(row.quantity)} onFocus={e=>e.target.select()} aria-invalid={value===null} onChange={e=>setInput(x=>({...x,[key(row)]:e.target.value}))}/>
         {changed&&<span className="portal-diff">Korrektur: {qty2(value!)} {row.unit} ({signed(value!-row.quantity)})</span>}
         {value===null&&<span className="portal-diff">Ungültige Menge</span>}</span>
       </div>;})}
