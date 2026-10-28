@@ -19,7 +19,7 @@ export default function Portal(){
  if(!view)return <main className="portal"><section className="portal-card">{error?<p role="alert" className="portal-error">{error}</p>:<p>Wird geladen ...</p>}</section></main>;
  const finished=done!==null||view.status!=='open',count=done??view.submission?.corrections.length??0;
  return <main className="portal">
-  <header><img src="/daso-logo.png" alt="DaSo Lüftungsbau" width={110}/></header>
+  <header><img src="/daso-logo-small.png" alt="DaSo Lüftungsbau" width={110}/></header>
   <section className="portal-card">
    <h1>Aufmaß prüfen</h1>
    <p className="portal-meta"><strong>{view.project.name}</strong> · {view.project.number}{view.project.customer?' · '+view.project.customer:''}<br/>{view.weeks.join(', ')}</p>
