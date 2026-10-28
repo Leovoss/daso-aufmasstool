@@ -22,4 +22,4 @@
 .portal-button:disabled{background:#b9b2e8;cursor:not-allowed}
 .portal-error{color:#b3261e;font-weight:600;margin-top:14px}
 .portal-done{border:1px solid #bfe3cb;background:#f1fbf4;border-radius:10px;padding:16px;margin-top:14px}
-@media(max-width:640px){.portal-head{display:none}.portal-row{grid-template-columns:1fr}.portal .num{text-align:left}.portal-card{padding:18px 14px}}
+@media(max-width:640px){.portal-row .num::before{content:attr(data-label);display:block;font-size:12px;font-weight:600;color:#5b6980}.portal-head{display:none}.portal-row{grid-template-columns:1fr 1fr;gap:6px 12px}.portal-row>strong,.portal-row>span:nth-child(2){grid-column:1/-1}.portal .num{text-align:left}.portal-card{padding:18px 14px}}

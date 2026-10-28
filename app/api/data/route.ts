@@ -1,6 +1,6 @@
 import {returnBelongsToReport,recordPackageReview,packageReportReviewed} from '@/lib/package-returns';
 import {db,readData,commit,createProject,readEmployeeDirectory} from '@/db/raw';
-import {actor} from '@/lib/auth';
+import {actor,planner} from '@/lib/auth';
 import {aggregate,aggregateKey,aggregateTotals,weekOf,weekStart,deadlineFrom,defaultTemplate,employeeValue,requiresCumulative} from '@/lib/business';
 import type {Project,ProjectTeam,ProjectEmployee,EmployeeDirectory,EmployeeMember,TeamWork,Position,Report,Closure,Payment,MailPackage,Line,Aggregate,WeekRecord,WeekChange} from '@/lib/types';
 import {effectiveWeekRows,weekRecord,weekFinance,weekToken,mergeRows,paymentWeek,summaryToken,packetSummaryValid,rangeWeekRows} from '@/lib/weeks';
@@ -32,6 +32,7 @@ export async function POST(request:Request){try{
   p.employees=employees;const changed=directory.token.startsWith('legacy-')||JSON.stringify(employees)!==JSON.stringify(directory.employees),next=changed?{...directory,employees,token:crypto.randomUUID(),updatedAt:now}:undefined;
   await createProject(p,user,next,directory.token);return Response.json({id});
  }
+ if(['archiveProject','deleteProject'].includes(action))await planner(request);
  need(projectId,'Bitte ein Projekt auswählen.');
  const revision=await db().prepare('SELECT version FROM project_revisions WHERE id = ?').bind(projectId).first<{version:number}>();need(revision,'Projekt nicht gefunden.');const data=await readData(projectId),project=data.projects.find(p=>p.id===projectId);need(project,'Projekt nicht gefunden.');
  const puts:{kind:string;value:{id:string;[key:string]:unknown}}[]=[],deletes:string[]=[];let detail='',id='',extra:Record<string,unknown>={},createdPosition:Position|undefined,directoryChange:{value:EmployeeDirectory;expectedToken:string}|undefined;
@@ -43,7 +44,7 @@ export async function POST(request:Request){try{
  const closed=(r:Report)=>data.closures.some(c=>c.week===weekOf(r.date));
  const guardWeek=(week:string)=>need(!data.packages.some(p=>p.deliveryState==='sending'&&((p.weeks||[p.week]).includes(week)||p.includeSummary&&(p.weeks||[p.week]).slice().sort().at(-1)!>=week)),'Diese Kalenderwoche ist Teil eines laufenden Versands. Bitte kurz warten.');
  const account=(week:string):WeekRecord=>weekRecord(data,week)||{id:projectId+':account:'+week,projectId,week,adjustments:[],history:[],updatedAt:''};
- if(action==='saveProject'){need(!data.packages.some(p=>p.deliveryState==='sending'),'Ein Versand läuft gerade. Bitte die Projektänderung danach speichern.');need(b.project.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte Stammdaten neu öffnen.');puts.push({kind:'project',value:{...projectValues({...b.project,requiresCumulative:b.project.requiresCumulative??project.requiresCumulative,timeRates:b.project.timeRates??project.timeRates,contactPersons:b.project.contactPersons??project.contactPersons},projectId,now),teams:project.teams||[],employees:project.employees||[]}});if(b.project.factor!==project.factor){for(const r of data.reports)puts.push({kind:'report',value:r});for(const c of data.closures)puts.push({kind:'closure',value:c});}}
+ if(action==='saveProject'){need(!data.packages.some(p=>p.deliveryState==='sending'),'Ein Versand läuft gerade. Bitte die Projektänderung danach speichern.');need(b.project.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte Stammdaten neu öffnen.');puts.push({kind:'project',value:{...projectValues({...b.project,requiresCumulative:b.project.requiresCumulative??project.requiresCumulative,timeRates:b.project.timeRates??project.timeRates,contactPersons:b.project.contactPersons??project.contactPersons},projectId,now),teams:project.teams||[],employees:project.employees||[],...(project.archivedAt?{archivedAt:project.archivedAt}:{})}});if(b.project.factor!==project.factor){for(const r of data.reports)puts.push({kind:'report',value:r});for(const c of data.closures)puts.push({kind:'closure',value:c});}}
  else if(action==='saveProjectTeams'){need(b.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte aktualisieren.');const teams=projectTeams((b as unknown as {teams:ProjectTeam[]}).teams);puts.push({kind:'project',value:{...project,teams,updatedAt:now}});detail=teams.map(t=>t.code).join(', ');}
  else if(action==='saveProjectEmployees'){need(b.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte aktualisieren.');const employees=saveEmployees((b as unknown as {employees:ProjectEmployee[]}).employees);puts.push({kind:'project',value:{...project,employees,updatedAt:now}});detail=`DaSo-Liste für alle Projekte · ${employees.map(e=>e.code).join(', ')}`;}
  else if(action==='saveProjectPeople'){need(b.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte aktualisieren.');const input=b as unknown as {employees:ProjectEmployee[];teams:ProjectTeam[]},employees=saveEmployees(input.employees),teams=projectTeams(input.teams);puts.push({kind:'project',value:{...project,employees,teams,updatedAt:now}});detail=`${employees.length} DaSo-Mitarbeiter für alle Projekte · ${teams.length} Nachunternehmer-Teams in diesem Projekt`;}
@@ -132,6 +133,14 @@ export async function POST(request:Request){try{
  }
  else if(action==='markPackageSent'){
    const pack=data.packages.find(p=>p.id===b.id) as (MailPackage&{versions:Record<string,string>})|undefined;need(pack&&!pack.sentAt&&pack.deliveryState!=='sending','Versandpaket nicht gefunden oder bereits versandt.');const reports=pack.reportIds.map(reportById);need(!bundleIssue(reports,data.reports),bundleIssue(reports,data.reports));need(packetSummaryValid(data,pack),'Projekteinstellung oder Kumulierung wurde geändert. Bitte neues Versandpaket erstellen.');need(reports.every(r=>r.state==='ready'&&r.updatedAt===pack.versions[r.id]),'Aufmaße wurden geändert. Bitte neues Versandpaket erstellen.');const sentDate=date(b.date),deadline=project.deadlineDays>0?deadlineFrom(sentDate,project.deadlineDays,project.deadlineType==='working'):null;puts.push({kind:'package',value:{...pack,sentAt:sentDate,deadline,deliveryState:'sent'}});for(const r of reports)puts.push({kind:'report',value:{...r,sentAt:sentDate,deadline,updatedAt:now}});detail=`Tatsächlicher Versand am ${sentDate}`;
+ }
+ else if(action==='archiveProject'){
+   const archived=(b as unknown as {archived:boolean}).archived===true,{archivedAt:_old,...rest}=project;puts.push({kind:'project',value:{...rest,...(archived?{archivedAt:now}:{}),updatedAt:now}});detail=`${project.number} · ${project.name} · ${archived?'archiviert':'wiederhergestellt'}`;
+ }
+ else if(action==='deleteProject'){
+   need(!data.reports.length&&!data.packages.length&&!data.closures.length&&!data.payments.length&&!data.files.length&&!data.weekRecords.length,'Projekte mit Aufmaßen, Versand oder Rechnungen können nur archiviert werden.');
+   await db().batch([db().prepare('DELETE FROM records WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM audit WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM project_revisions WHERE id = ?').bind(projectId),db().prepare('INSERT INTO audit (id,project_id,action,user,detail,at) VALUES (?,?,?,?,?,?)').bind(crypto.randomUUID(),'system','Projekt gelöscht',user,`${project.number} · ${project.name}`,now)]);
+   return Response.json({ok:true,id:projectId});
  }
  else if(action==='deleteReport'){
    const r=reportById(text(b.id)),reason=text(b.reason,2000);id=r.id;guardWeek(weekOf(r.date));
