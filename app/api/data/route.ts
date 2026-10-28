@@ -1,5 +1,5 @@
 import {returnBelongsToReport,recordPackageReview,packageReportReviewed} from '@/lib/package-returns';
-import {db,readData,commit,createProject,readEmployeeDirectory} from '@/db/raw';
+import {db,bucket,readData,commit,createProject,readEmployeeDirectory} from '@/db/raw';
 import {actor,planner} from '@/lib/auth';
 import {aggregate,aggregateKey,aggregateTotals,weekOf,weekStart,deadlineFrom,defaultTemplate,employeeValue,requiresCumulative} from '@/lib/business';
 import type {Project,ProjectTeam,ProjectEmployee,EmployeeDirectory,EmployeeMember,TeamWork,Position,Report,Closure,Payment,MailPackage,Line,Aggregate,WeekRecord,WeekChange} from '@/lib/types';
@@ -32,7 +32,7 @@ export async function POST(request:Request){try{
   p.employees=employees;const changed=directory.token.startsWith('legacy-')||JSON.stringify(employees)!==JSON.stringify(directory.employees),next=changed?{...directory,employees,token:crypto.randomUUID(),updatedAt:now}:undefined;
   await createProject(p,user,next,directory.token);return Response.json({id});
  }
- if(['archiveProject','deleteProject'].includes(action))await planner(request);
+ if(['archiveProject','deleteProject','projectImpact'].includes(action))await planner(request);
  need(projectId,'Bitte ein Projekt auswählen.');
  const revision=await db().prepare('SELECT version FROM project_revisions WHERE id = ?').bind(projectId).first<{version:number}>();need(revision,'Projekt nicht gefunden.');const data=await readData(projectId),project=data.projects.find(p=>p.id===projectId);need(project,'Projekt nicht gefunden.');
  const puts:{kind:string;value:{id:string;[key:string]:unknown}}[]=[],deletes:string[]=[];let detail='',id='',extra:Record<string,unknown>={},createdPosition:Position|undefined,directoryChange:{value:EmployeeDirectory;expectedToken:string}|undefined;
@@ -137,9 +137,15 @@ export async function POST(request:Request){try{
  else if(action==='archiveProject'){
    const archived=(b as unknown as {archived:boolean}).archived===true,{archivedAt:_old,...rest}=project;puts.push({kind:'project',value:{...rest,...(archived?{archivedAt:now}:{}),updatedAt:now}});detail=`${project.number} · ${project.name} · ${archived?'archiviert':'wiederhergestellt'}`;
  }
- else if(action==='deleteProject'){
-   need(project.archivedAt,'Bitte das Projekt zuerst archivieren.');need(!data.reports.length&&!data.packages.length&&!data.closures.length&&!data.payments.length&&!data.files.length&&!data.weekRecords.length,'Projekte mit Aufmaßen, Versand oder Rechnungen können nur archiviert werden.');
-   await db().batch([db().prepare('DELETE FROM records WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM audit WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM project_revisions WHERE id = ?').bind(projectId),db().prepare('INSERT INTO audit (id,project_id,action,user,detail,at) VALUES (?,?,?,?,?,?)').bind(crypto.randomUUID(),'system','Projekt gelöscht',user,`${project.number} · ${project.name}`,now)]);
+ else if(action==='projectImpact'||action==='deleteProject'){
+   need(project.archivedAt,'Bitte das Projekt zuerst archivieren.');
+   const invoices=[...data.closures.filter(c=>c.invoiceNumber||c.invoiceAmount).map(c=>({week:c.week,number:c.invoiceNumber,amount:c.invoiceAmount})),...data.weekRecords.filter(w=>w.invoice).map(w=>({week:w.week,number:w.invoice!.number,amount:w.invoice!.amount}))],sentPackages=data.packages.filter(p=>p.sentAt).length,paidAmount=data.payments.reduce((sum,p)=>sum+p.amount,0);
+   const impact={reports:data.reports.length,packages:data.packages.length,sentPackages,closures:data.closures.length,invoices,payments:data.payments.length,paidAmount,files:data.files.length},sensitive=invoices.length>0||data.payments.length>0||sentPackages>0;
+   if(action==='projectImpact')return Response.json({ok:true,impact,sensitive,number:project.number});
+   if(sensitive)need(text((b as unknown as {confirmNumber:string}).confirmNumber,100)===project.number,'Bitte die Projektnummer zur Bestätigung eintragen.');
+   const keys=data.files.flatMap(f=>[f.key,f.original?.key]).concat(data.packages.map(p=>(p as MailPackage&{emlKey?:string}).emlKey)).filter((k):k is string=>!!k);
+   await db().batch([db().prepare('DELETE FROM records WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM audit WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM project_revisions WHERE id = ?').bind(projectId),db().prepare('INSERT INTO audit (id,project_id,action,user,detail,at) VALUES (?,?,?,?,?,?)').bind(crypto.randomUUID(),'system','Projekt gelöscht',user,`${project.number} · ${project.name} · ${impact.reports} Aufmaße, ${invoices.length} Rechnungen, ${impact.payments} Zahlungen`,now)]);
+   await Promise.all(keys.map(k=>bucket().delete(k).catch(()=>{})));
    return Response.json({ok:true,id:projectId});
  }
  else if(action==='deleteReport'){
