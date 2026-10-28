@@ -60,12 +60,13 @@ export async function checkPortal({call,state,upload,mf,headers,db,pdf,business,
  const planned=await (await mf.dispatchFetch('http://test/api/plan',{headers:await as('foreman2@example.invalid')})).json();assert.equal(planned.projects.length,1,'archived projects are hidden');assert.deepEqual(planned.projects[0],{id:'p1',name:'CISPA',address:'Saarbruecken',email:'bau@example.invalid',orderNumber:'B-1',number:'2026-1',customer:'Bau AG',foreman:'Max Obermonteur',contacts:[{name:'Frau Bauleitung',role:'',email:'',phone:'0170'}]});assert.equal((await mf.dispatchFetch('http://test/api/plan')).status,400,'sign-in required');
  // Archive and delete are Planer-only; delete is limited to projects without Aufmaße.
  const forMain=projectId,spare=(await call('saveProject',{projectId:'',project:{name:'Archivtest',number:'ARCH-1',factor:.9,deadlineDays:0}})).id;setProjectId(spare);
+ assert.equal((await (await mf.dispatchFetch('http://test/api/me',{headers:await as('foreman2@example.invalid')})).json()).role,'Obermonteur');assert.equal((await (await mf.dispatchFetch('http://test/api/me',{headers})).json()).role,'Planer');assert.equal((await mf.dispatchFetch('http://test/api/me')).status,400);
  const asForeman=async body=>(await mf.dispatchFetch('http://test/api/data',{method:'POST',headers:{'Content-Type':'application/json',...await as('foreman2@example.invalid')},body:JSON.stringify({projectId:spare,...body})})).status;
  assert.equal(await asForeman({action:'archiveProject',archived:true}),400);assert.equal(await asForeman({action:'deleteProject'}),400);
  await call('archiveProject',{archived:true});let all=await state();assert(all.projects.find(p=>p.id===spare).archivedAt);
  await call('saveProject',{project:{...all.projects.find(p=>p.id===spare),name:'Archivtest neu'}});all=await state();assert(all.projects.find(p=>p.id===spare).archivedAt,'editing keeps the archive flag');
  await call('archiveProject',{archived:false});all=await state();assert(!all.projects.find(p=>p.id===spare).archivedAt);
- setProjectId(forMain);await call('deleteProject',{},400);setProjectId(spare);await call('deleteProject');all=await state();assert(!all.projects.some(p=>p.id===spare),'empty project is deleted');
+ setProjectId(forMain);await call('deleteProject',{},400);setProjectId(spare);await call('deleteProject',{},400);await call('archiveProject',{archived:true});await call('deleteProject');all=await state();assert(!all.projects.some(p=>p.id===spare),'empty project is deleted');
  const gone=await db.prepare('SELECT COUNT(*) AS n FROM records WHERE project_id = ?').bind(spare).first();assert.equal(gone.n,0);setProjectId(forMain);
  console.log('PASS: customer link (hashed token, origin check, single submit under concurrency, expiry, revoke), flattened proof PDF with embedded JSON, staff apply and reject, soft delete rules, cross-week date moves and Montageplanung roles');
 }

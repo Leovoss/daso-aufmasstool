@@ -138,7 +138,7 @@ export async function POST(request:Request){try{
    const archived=(b as unknown as {archived:boolean}).archived===true,{archivedAt:_old,...rest}=project;puts.push({kind:'project',value:{...rest,...(archived?{archivedAt:now}:{}),updatedAt:now}});detail=`${project.number} · ${project.name} · ${archived?'archiviert':'wiederhergestellt'}`;
  }
  else if(action==='deleteProject'){
-   need(!data.reports.length&&!data.packages.length&&!data.closures.length&&!data.payments.length&&!data.files.length&&!data.weekRecords.length,'Projekte mit Aufmaßen, Versand oder Rechnungen können nur archiviert werden.');
+   need(project.archivedAt,'Bitte das Projekt zuerst archivieren.');need(!data.reports.length&&!data.packages.length&&!data.closures.length&&!data.payments.length&&!data.files.length&&!data.weekRecords.length,'Projekte mit Aufmaßen, Versand oder Rechnungen können nur archiviert werden.');
    await db().batch([db().prepare('DELETE FROM records WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM audit WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM project_revisions WHERE id = ?').bind(projectId),db().prepare('INSERT INTO audit (id,project_id,action,user,detail,at) VALUES (?,?,?,?,?,?)').bind(crypto.randomUUID(),'system','Projekt gelöscht',user,`${project.number} · ${project.name}`,now)]);
    return Response.json({ok:true,id:projectId});
  }

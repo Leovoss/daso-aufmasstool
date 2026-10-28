@@ -50,9 +50,11 @@ export async function makePortalProof(link:PortalLink,submission:Omit<PortalSubm
  para('Die Korrektur wird nach Prüfung durch DaSo Lüftungsbau übernommen. Dieses Dokument ist nicht bearbeitbar.',8,font,muted);y-=8;
  const cols=[M,M+62,M+270,M+310,M+380,M+455],head=()=>{page.drawRectangle({x:M,y:y-5,width:W-M*2,height:17,color:light});['Position','Bezeichnung','EH','Aufmaß','Korrektur','Differenz'].forEach((label,i)=>page.drawText(label,{x:cols[i]+2,y,size:8,font:bold,color:ink}));y-=18;};
  head();
+ let group='';
  for(const row of link.rows){
-  const lines=wrap(font,row.description,200,8),height=Math.max(1,lines.length)*10+4;
-  if(y-height<M+20){page=doc.addPage([W,H]);y=H-M;head();}
+  const lines=wrap(font,row.description,200,8),height=Math.max(1,lines.length)*10+4,label=link.reports.find(r=>r.id===row.reportId)?.label||'';
+  if(y-height-(label!==group?16:0)<M+20){page=doc.addPage([W,H]);y=H-M;head();group='';}
+  if(label!==group){group=label;y-=4;page.drawText(safe('Aufmaß '+label),{x:M,y,size:9,font:bold,color:rgb(.286,.165,.87)});y-=14;}
   const corrected=changed.get(row.reportId+'|'+row.lineId),color=corrected===undefined?ink:red;
   page.drawText(safe(row.number),{x:cols[0]+2,y,size:8,font:bold,color:ink});lines.forEach((line,i)=>page.drawText(line,{x:cols[1]+2,y:y-i*10,size:8,font,color:ink}));
   page.drawText(safe(row.unit),{x:cols[2]+2,y,size:8,font,color:ink});
