@@ -45,10 +45,10 @@ export async function POST(request:Request){try{
  const closed=(r:Report)=>data.closures.some(c=>c.week===weekOf(r.date));
  const guardWeek=(week:string)=>need(!data.packages.some(p=>p.deliveryState==='sending'&&((p.weeks||[p.week]).includes(week)||p.includeSummary&&(p.weeks||[p.week]).slice().sort().at(-1)!>=week)),'Diese Kalenderwoche ist Teil eines laufenden Versands. Bitte kurz warten.');
  const account=(week:string):WeekRecord=>weekRecord(data,week)||{id:projectId+':account:'+week,projectId,week,adjustments:[],history:[],updatedAt:''};
- if(action==='saveProject'){need(!data.packages.some(p=>p.deliveryState==='sending'),'Ein Versand läuft gerade. Bitte die Projektänderung danach speichern.');need(b.project.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte Stammdaten neu öffnen.');puts.push({kind:'project',value:{...projectValues({...b.project,requiresCumulative:b.project.requiresCumulative??project.requiresCumulative,timeRates:b.project.timeRates??project.timeRates,contactPersons:b.project.contactPersons??project.contactPersons},projectId,now),teams:project.teams||[],employees:project.employees||[],...(project.archivedAt?{archivedAt:project.archivedAt}:{})}});if(b.project.factor!==project.factor){for(const r of data.reports)puts.push({kind:'report',value:r});for(const c of data.closures)puts.push({kind:'closure',value:c});}}
- else if(action==='saveProjectTeams'){need(b.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte aktualisieren.');const teams=projectTeams((b as unknown as {teams:ProjectTeam[]}).teams);puts.push({kind:'project',value:{...project,teams,updatedAt:now}});detail=teams.map(t=>t.code).join(', ');}
+ if(action==='saveProject'){need(!data.packages.some(p=>p.deliveryState==='sending'),'Ein Versand läuft gerade. Bitte die Projektänderung danach speichern.');need(b.project.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte Stammdaten neu öffnen.');puts.push({kind:'project',value:{...projectValues({...b.project,...(project.planId?{planId:project.planId,name:project.name,number:project.number,orderNumber:project.orderNumber,customer:project.customer,address:project.address,foremanName:project.foremanName}:{}),requiresCumulative:b.project.requiresCumulative??project.requiresCumulative,timeRates:b.project.timeRates??project.timeRates,contactPersons:b.project.contactPersons??project.contactPersons},projectId,now),teams:project.teams||[],employees:project.employees||[],...(project.archivedAt?{archivedAt:project.archivedAt}:{}),...(project.archivedByPlan?{archivedByPlan:true}:{})}});if(b.project.factor!==project.factor){for(const r of data.reports)puts.push({kind:'report',value:r});for(const c of data.closures)puts.push({kind:'closure',value:c});}}
+ else if(action==='saveProjectTeams'){need(b.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte aktualisieren.');const teams=projectTeams((b as unknown as {teams:ProjectTeam[]}).teams,project.teams||[]);puts.push({kind:'project',value:{...project,teams,updatedAt:now}});detail=teams.map(t=>t.code).join(', ');}
  else if(action==='saveProjectEmployees'){need(b.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte aktualisieren.');const employees=saveEmployees((b as unknown as {employees:ProjectEmployee[]}).employees);puts.push({kind:'project',value:{...project,employees,updatedAt:now}});detail=`DaSo-Liste für alle Projekte · ${employees.map(e=>e.code).join(', ')}`;}
- else if(action==='saveProjectPeople'){need(b.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte aktualisieren.');const input=b as unknown as {employees:ProjectEmployee[];teams:ProjectTeam[]},employees=saveEmployees(input.employees),teams=projectTeams(input.teams);puts.push({kind:'project',value:{...project,employees,teams,updatedAt:now}});detail=`${employees.length} DaSo-Mitarbeiter für alle Projekte · ${teams.length} Nachunternehmer-Teams in diesem Projekt`;}
+ else if(action==='saveProjectPeople'){need(b.updatedAt===project.updatedAt,'Projekt wurde geändert. Bitte aktualisieren.');const input=b as unknown as {employees:ProjectEmployee[];teams:ProjectTeam[]},employees=saveEmployees(input.employees),teams=projectTeams(input.teams,project.teams||[]);puts.push({kind:'project',value:{...project,employees,teams,updatedAt:now}});detail=`${employees.length} DaSo-Mitarbeiter für alle Projekte · ${teams.length} Nachunternehmer-Teams in diesem Projekt`;}
  else if(action==='addPosition'){
    const details=manualPositionDetails((b as unknown as {position:unknown}).position,data.positions);
    id=crypto.randomUUID();createdPosition={...details,id,projectId,isSupplement:true};puts.push({kind:'position',value:createdPosition});detail=`${details.number} · ${details.description}`;
@@ -136,7 +136,7 @@ export async function POST(request:Request){try{
    const pack=data.packages.find(p=>p.id===b.id) as (MailPackage&{versions:Record<string,string>})|undefined;need(pack&&!pack.sentAt&&pack.deliveryState!=='sending','Versandpaket nicht gefunden oder bereits versandt.');const reports=pack.reportIds.map(reportById);need(!bundleIssue(reports,data.reports),bundleIssue(reports,data.reports));need(packetSummaryValid(data,pack),'Projekteinstellung oder Kumulierung wurde geändert. Bitte neues Versandpaket erstellen.');need(reports.every(r=>r.state==='ready'&&r.updatedAt===pack.versions[r.id]),'Aufmaße wurden geändert. Bitte neues Versandpaket erstellen.');const sentDate=date(b.date),deadline=project.deadlineDays>0?deadlineFrom(sentDate,project.deadlineDays,project.deadlineType==='working'):null;puts.push({kind:'package',value:{...pack,sentAt:sentDate,deadline,deliveryState:'sent'}});for(const r of reports)puts.push({kind:'report',value:{...r,sentAt:sentDate,deadline,updatedAt:now}});detail=`Tatsächlicher Versand am ${sentDate}`;
  }
  else if(action==='archiveProject'){
-   const archived=(b as unknown as {archived:boolean}).archived===true,{archivedAt:_old,...rest}=project;puts.push({kind:'project',value:{...rest,...(archived?{archivedAt:now}:{}),updatedAt:now}});detail=`${project.number} · ${project.name} · ${archived?'archiviert':'wiederhergestellt'}`;
+   const archived=(b as unknown as {archived:boolean}).archived===true,{archivedAt:_old,archivedByPlan:_by,...rest}=project;puts.push({kind:'project',value:{...rest,...(archived?{archivedAt:now}:{}),updatedAt:now}});detail=`${project.number} · ${project.name} · ${archived?'archiviert':'wiederhergestellt'}`;
  }
  else if(action==='projectImpact'||action==='deleteProject'){
    need(project.archivedAt,'Bitte das Projekt zuerst archivieren.');
@@ -196,6 +196,18 @@ async function syncPlanProjects(){
   for(const m of plan.projects){const p=existing.find(x=>x.planId===m.id);if(p&&m.email&&p.measurementEmail.trim().toLowerCase()===m.email.trim().toLowerCase()){try{await commit(p.id,'Aufmaß-E-Mail bereinigt','Montageplanung',[{kind:'project',value:{...p,measurementEmail:'',updatedAt:new Date().toISOString()} as Project}]);}catch{/* retried on the next load */}}}
   await db().prepare("INSERT OR IGNORE INTO records (id,kind,project_id,data,updated_at) VALUES ('migration:plan-email-1','migration','system','{}',?)").bind(new Date().toISOString()).run();
  }
+
+ // Linked projects follow Montageplanung: master data, and archiving when it archives or removes the project.
+ for(const p of existing){
+  if(!p.planId)continue;
+  const m=plan.projects.find(x=>x.id===p.planId),now=new Date().toISOString();let next:Project|undefined;
+  if(m){
+   const master={name:m.name||p.name,number:m.number||p.number,orderNumber:m.orderNumber,customer:m.customer,address:m.address,foremanName:m.foreman};
+   const differs=(Object.keys(master) as (keyof typeof master)[]).some(k=>(p[k]||'')!==master[k]);
+   if(differs||(p.archivedByPlan&&p.archivedAt)){const {archivedAt,archivedByPlan,...rest}=p;next={...rest,...master,...(!archivedByPlan&&archivedAt?{archivedAt}:{}),updatedAt:now} as Project;}
+  }else if(!p.archivedAt)next={...p,archivedAt:now,archivedByPlan:true,updatedAt:now};
+  if(next){try{await commit(p.id,'Projekt mit Montageplanung abgeglichen','Montageplanung',[{kind:'project',value:next}]);}catch{/* retried on the next load */}}
+ }
  for(const m of plan.projects){
   if(removed.has(m.id)||existing.some(p=>p.planId===m.id||(!p.planId&&((m.number&&p.number===m.number)||p.name.trim().toLowerCase()===m.name.trim().toLowerCase()))))continue;
   try{
@@ -208,13 +220,20 @@ async function syncPlanProjects(){
   }catch{/* another request created it first, or the data is unusable; try again on the next load */}
  }
 
- // Employees and contractors follow Montageplanung as well. Nothing is removed here, because saved reports refer to them.
+ // Employees follow Montageplanung by its own id: renames carry over, and people it archives become inactive here.
  const anchor=await db().prepare("SELECT id FROM records WHERE kind = 'project' ORDER BY id LIMIT 1").first<{id:string}>();
  if(!anchor)return;
  try{
-  const directory=await readEmployeeDirectory(),known=new Set(directory.employees.map(e=>(e.firstName+' '+e.lastName).trim().toLowerCase().replace(/\s+/g,' '))),incoming:ProjectEmployee[]=[];
-  for(const person of plan.employees){const parts=person.name.trim().split(/\s+/);if(parts.length<2)continue;const key=parts.join(' ').toLowerCase();if(known.has(key))continue;known.add(key);incoming.push({id:crypto.randomUUID(),firstName:parts.slice(0,-1).join(' '),lastName:parts[parts.length-1],code:''});}
-  if(incoming.length)await commit(anchor.id,'Mitarbeiter aus Montageplanung','Montageplanung',[],[],incoming.length+' neu',undefined,{value:{...directory,employees:addDirectoryEmployees(directory.employees,incoming),token:crypto.randomUUID(),updatedAt:new Date().toISOString()},expectedToken:directory.token});
+  const directory=await readEmployeeDirectory(),norm=(first:string,last:string)=>(first+' '+last).trim().toLowerCase().replace(/\s+/g,' '),employees=directory.employees.map(e=>({...e})),active=new Set(plan.employees.map(e=>e.id)),incoming:ProjectEmployee[]=[];
+  const byPlan=new Map(employees.filter(e=>e.planId).map(e=>[e.planId!,e])),byName=new Map(employees.filter(e=>!e.planId).map(e=>[norm(e.firstName,e.lastName),e]));let changed=false;
+  for(const person of plan.employees){
+   const parts=person.name.trim().split(/\s+/);if(parts.length<2)continue;
+   const firstName=parts.slice(0,-1).join(' '),lastName=parts[parts.length-1],hit=byPlan.get(person.id)||byName.get(norm(firstName,lastName));
+   if(hit){if(hit.planId!==person.id||hit.firstName!==firstName||hit.lastName!==lastName||hit.inactive){hit.planId=person.id;hit.firstName=firstName;hit.lastName=lastName;delete hit.inactive;changed=true;}byName.delete(norm(firstName,lastName));}
+   else incoming.push({id:crypto.randomUUID(),firstName,lastName,code:'',planId:person.id});
+  }
+  for(const e of employees)if(e.planId&&!active.has(e.planId)&&!e.inactive){e.inactive=true;changed=true;}
+  if(changed||incoming.length)await commit(anchor.id,'Mitarbeiter aus Montageplanung','Montageplanung',[],[],incoming.length+' neu',undefined,{value:{...directory,employees:incoming.length?addDirectoryEmployees(employees,incoming):employees,token:crypto.randomUUID(),updatedAt:new Date().toISOString()},expectedToken:directory.token});
  }catch{/* retried on the next load */}
  // Contractors become teams only in projects where Montageplanung assigns them.
  const rows2=await db().prepare("SELECT data FROM records WHERE kind = 'project'").all<{data:string}>();
@@ -222,15 +241,18 @@ async function syncPlanProjects(){
  for(const row of rows2.results){
   const p=JSON.parse(row.data) as Project;if(!p.planId)continue;
   const mine=plan.assigned.filter(a=>a.projectId===p.planId),assignedNames=new Set(mine.map(a=>a.name.trim().toLowerCase())),contractorNames=new Set(plan.contractors.map(c=>c.name.trim().toLowerCase()));
-  let teams=p.teams||[];
+  let teams=(p.teams||[]).map(t=>({...t}));
   if(!cleaned){
    // Remove placeholder teams that an earlier version added to every project, unless a report already uses them.
    const used=new Set((await db().prepare("SELECT data FROM records WHERE kind = 'report' AND project_id = ?").bind(p.id).all<{data:string}>()).results.flatMap(r=>reportCrews(JSON.parse(r.data) as Report).map(c=>c.team)));
    teams=teams.filter(t=>!(contractorNames.has(t.company.trim().toLowerCase())&&!assignedNames.has(t.company.trim().toLowerCase())&&t.hourlyRate===null&&!t.employees.some(Boolean)&&!used.has(t.code)));
   }
-  const companies=new Set(teams.map(t=>t.company.trim().toLowerCase())),codes=new Set(teams.map(t=>t.code)),added:ProjectTeam[]=[];
-  for(const a of mine){const name=a.name.trim();if(!name||companies.has(name.toLowerCase()))continue;companies.add(name.toLowerCase());let n=1;while(codes.has('T'+n))n++;codes.add('T'+n);added.push({code:'T'+n,company:name,employees:[name,a.max>=2?name+' 2':''],hourlyRate:null});}
-  teams=teams.map(t=>assignedNames.has(t.company.trim().toLowerCase())&&!t.employees.some(Boolean)?{...t,employees:[t.company,mine.find(a=>a.name.trim().toLowerCase()===t.company.trim().toLowerCase())!.max>=2?t.company+' 2':'']}:t);
+  const codes=new Set(teams.map(t=>t.code)),added:ProjectTeam[]=[];
+  for(const a of mine){
+   const name=a.name.trim(),workers:[string,string]=[name,a.max>=2?name+' 2':''],t=teams.find(x=>x.planId===a.contractorId)||teams.find(x=>!x.planId&&x.company.trim().toLowerCase()===name.toLowerCase());
+   if(t){t.planId=a.contractorId;t.company=name;if(!t.employees.some(Boolean))t.employees=workers;}
+   else if(name){let n=1;while(codes.has('T'+n))n++;codes.add('T'+n);added.push({code:'T'+n,company:name,planId:a.contractorId,employees:workers,hourlyRate:null});}
+  }
   const next=[...teams,...added];
   if(JSON.stringify(next)!==JSON.stringify(p.teams||[])){try{await commit(p.id,'Nachunternehmer aus Montageplanung','Montageplanung',[{kind:'project',value:{...p,teams:next,updatedAt:new Date().toISOString()} as Project}],[],added.map(t=>t.company).join(', '));}catch{/* retried on the next load */}}
  }
@@ -241,10 +263,13 @@ function projectValues(v:Project,id:string,now:string):Project{
  need(v&&text(v.name)&&text(v.number),'Projektname und Projektnummer fehlen.');need(v.requiresCumulative===undefined||typeof v.requiresCumulative==='boolean','Bitte die Einstellung zur kumulierten Aufstellung prüfen.');const factor=Number(v.factor);need(Number.isFinite(factor)&&factor>=0&&factor<=1,'Mitarbeiterfaktor muss zwischen 0 und 1 liegen.');const days=integer(v.deadlineDays,90),contactPersons=validateProjectContacts(v.contactPersons);return{id,name:text(v.name,200),foremanName:text(v.foremanName,160),number:text(v.number,100),orderNumber:text(v.orderNumber,100),customer:text(v.customer,200),address:text(v.address,1000),areas:[...new Set((v.areas||[]).map(x=>text(x,200)).filter(Boolean))].slice(0,100),teams:projectTeams(v.teams||[]),employees:projectEmployees(v.employees||[]),measurementEmail:emails(v.measurementEmail),invoiceEmail:emails(v.invoiceEmail),cc:emails(v.cc),contact:text(v.contact,200)||text(v.foremanName,160),...(v.planId?{planId:text(v.planId,100)}:{}),contacts:contactPersons===undefined?text(v.contacts,5000):contactText(contactPersons),...(contactPersons===undefined?{}:{contactPersons}),factor,deadlineDays:days,deadlineType:v.deadlineType==='working'?'working':'calendar',template:text(v.template||defaultTemplate,20000),hourlyNote:!!v.hourlyNote,requiresCumulative:requiresCumulative(v),timeRates:validateTimeRates(v.timeRates),updatedAt:now};
 }
 
-function projectTeams(input:ProjectTeam[]):ProjectTeam[]{need(Array.isArray(input)&&input.length<=100,'Bitte höchstens 100 Teams hinterlegen.');const codes=new Set<string>();return input.map(t=>{const code=text(t.code,80);need(code&&!codes.has(code),'Teamkürzel fehlt oder ist doppelt.');codes.add(code);const hourlyRate=t.hourlyRate===null||t.hourlyRate===undefined?null:integer(t.hourlyRate,1e8);return{code,company:text(t.company,200),employees:[text(t.employees?.[0],160),text(t.employees?.[1],160)],hourlyRate};});}
+function projectTeams(input:ProjectTeam[],previous:ProjectTeam[]=[]):ProjectTeam[]{need(Array.isArray(input)&&input.length<=100,'Bitte höchstens 100 Teams hinterlegen.');const codes=new Set<string>();const teams:ProjectTeam[]=input.map(t=>{const code=text(t.code,80);need(code&&!codes.has(code),'Teamkürzel fehlt oder ist doppelt.');codes.add(code);const hourlyRate=t.hourlyRate===null||t.hourlyRate===undefined?null:integer(t.hourlyRate,1e8),prior=previous.find(x=>x.code===code&&x.planId);return{code,company:prior?prior.company:text(t.company,200),employees:[text(t.employees?.[0],160),text(t.employees?.[1],160)] as [string,string],hourlyRate,...(prior?{planId:prior.planId}:{})};});for(const prior of previous)if(prior.planId&&!codes.has(prior.code))teams.push(prior);return teams;}
 
 function projectEmployees(input:ProjectEmployee[],previous:ProjectEmployee[]=[]):ProjectEmployee[]{
  need(Array.isArray(input)&&input.length<=500,'Bitte höchstens 500 Mitarbeiter hinterlegen.');const ids=new Set<string>();
- const employees=input.map(e=>{const id=text(e.id,100),firstName=text(e.firstName,80),lastName=text(e.lastName,80);need(id!==TRIAL_EMPLOYEE_ID&&id&&!ids.has(id),'Mitarbeiter-ID fehlt oder ist doppelt.');ids.add(id);need(firstName&&lastName&&/^[\p{L}]/u.test(firstName)&&/^[\p{L}]/u.test(lastName),'Bitte Vor- und Nachname vollständig eintragen.');const prior=findEmployee(previous,id);return{id:prior?.id||id,firstName,lastName,code:'',...(prior?.legacyIds?.length?{legacyIds:prior.legacyIds}:{})};});need(new Set(employees.map(e=>e.id)).size===employees.length,'Mitarbeiter wurde mehrfach eingetragen.');
+ const employees=input.map(e=>{const id=text(e.id,100),prior=findEmployee(previous,id),linked=!!prior?.planId,firstName=linked?prior!.firstName:text(e.firstName,80),lastName=linked?prior!.lastName:text(e.lastName,80);need(id!==TRIAL_EMPLOYEE_ID&&id&&!ids.has(id),'Mitarbeiter-ID fehlt oder ist doppelt.');ids.add(id);need(firstName&&lastName&&/^[\p{L}]/u.test(firstName)&&/^[\p{L}]/u.test(lastName),'Bitte Vor- und Nachname vollständig eintragen.');return{id:prior?.id||id,firstName,lastName,code:'',...(prior?.legacyIds?.length?{legacyIds:prior.legacyIds}:{}),...(prior?.planId?{planId:prior.planId}:{}),...(prior?.inactive?{inactive:true}:{})};});
+ // People that Montageplanung manages cannot be removed here.
+ for(const prior of previous)if(prior.planId&&!employees.some(e=>e.id===prior.id))employees.push({id:prior.id,firstName:prior.firstName,lastName:prior.lastName,code:'',...(prior.legacyIds?.length?{legacyIds:prior.legacyIds}:{}),planId:prior.planId,...(prior.inactive?{inactive:true}:{})});
+ need(new Set(employees.map(e=>e.id)).size===employees.length,'Mitarbeiter wurde mehrfach eingetragen.');
  return assignEmployeeCodes(employees,previous);
 }

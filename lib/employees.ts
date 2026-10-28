@@ -23,7 +23,7 @@ export function employeeTeamCode(members:EmployeeMember[]):string{return [...mem
 export const TRIAL_EMPLOYEE_ID='__daso_trial__';
 export function findEmployee(employees:ProjectEmployee[],id:string){return employees.find(e=>e.id===id||e.legacyIds?.includes(id));}
 export function employeeChoices(employees:ProjectEmployee[],members:EmployeeMember[]):EmployeeMember[]{
- const choices=employees.map(e=>{const stored=members.find(m=>m.employeeId===e.id||e.legacyIds?.includes(m.employeeId));return stored||{employeeId:e.id,name:e.firstName+' '+e.lastName,code:e.code,trial:false};});
+ const choices=employees.filter(e=>!e.inactive||members.some(m=>m.employeeId===e.id||e.legacyIds?.includes(m.employeeId))).map(e=>{const stored=members.find(m=>m.employeeId===e.id||e.legacyIds?.includes(m.employeeId));return stored||{employeeId:e.id,name:e.firstName+' '+e.lastName,code:e.code,trial:false};});
  return [...choices,...members.filter(m=>m.employeeId!==TRIAL_EMPLOYEE_ID&&!findEmployee(employees,m.employeeId)),trialEmployee(members)];
 }
 export function trialEmployee(members:EmployeeMember[]=[]):EmployeeMember {

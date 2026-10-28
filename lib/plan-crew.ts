@@ -5,7 +5,7 @@ export type PlanDay={employees:string[];contractors:{name:string;count:number}[]
 const key=(value:string)=>value.trim().normalize('NFKC').toLowerCase().replace(/\s+/g,' ');
 // The crew Montageplanung has planned for this project and day, as a patch for any report type.
 export function planCrewPatch(project:Pick<Project,'employees'|'teams'>,day:PlanDay):Partial<Report>|null{
- const known=new Map((project.employees||[]).map(e=>[key(e.firstName+' '+e.lastName),e])),members:EmployeeMember[]=[];
+ const known=new Map((project.employees||[]).filter(e=>!e.inactive).map(e=>[key(e.firstName+' '+e.lastName),e])),members:EmployeeMember[]=[];
  for(const name of day.employees){const e=known.get(key(name));if(e&&!members.some(m=>m.employeeId===e.id))members.push({employeeId:e.id,name:`${e.firstName} ${e.lastName}`,code:e.code,trial:false});}
  members.sort((a,b)=>a.code.localeCompare(b.code,'de',{numeric:true}));
  const crews:ReportCrew[]=[];
