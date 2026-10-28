@@ -8,7 +8,7 @@ import {assignEmployeeCodes,employeeTeamCode,TRIAL_EMPLOYEE_ID,trialEmployee,fin
 import {addDirectoryEmployees} from '@/lib/employee-directory';
 import {remarkAdjustment,adjustedPrice,adjustmentMissing,percentRemark} from '@/lib/line-adjustments';
 import {bundleIssue} from '@/lib/linked-extras';
-import {reportKind,isTimeReport,reportLabel,canonicalTimeSheet,timeLines,timeDates,timeReportBounds,timeReadiness,validateTimeRates,workMinutes} from '@/lib/time-reports';
+import {reportKind,isTimeReport,reportLabel,canonicalTimeSheet,timeLines,timeDates,timeReportBounds,timeReadiness,validateTimeRates,workMinutes,defaultTimeRates} from '@/lib/time-reports';
 import {contactText,validateProjectContacts} from '@/lib/project-contacts';
 import {manualPositionDetails,positionNumberKey} from '@/lib/manual-positions';
 import {approvedLVDescriptionChanges} from '@/lib/approved-lv-descriptions';
@@ -17,6 +17,7 @@ import {invoiceBasis} from '@/lib/invoice-basis';
 import {defaultCompany} from '@/lib/company';
 import {closureIsCurrent,weekSourceToken} from '@/lib/weeks';
 import {buildPortal,portalUrl} from '@/lib/portal-link';
+import {readPlan} from '@/lib/plan';
 
 function text(v:unknown,max=2000){return String(v??'').trim().slice(0,max);}
 function need(ok:unknown,message:string):asserts ok{if(!ok)throw new Error(message);}
@@ -24,7 +25,7 @@ function date(v:unknown){const s=text(v,10);need(/^\d{4}-\d{2}-\d{2}$/.test(s)&&
 function emails(v:unknown){const s=text(v,1000);need(!/[\r\n]/.test(s)&&s.split(/[;,]/).filter(x=>x.trim()).every(x=>/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(x.trim())),'Bitte E-Mail-Adressen prüfen (mehrere mit Komma trennen).');return s;}
 function integer(v:unknown,max=1e12){const n=Number(v);need(typeof v==='number'&&Number.isSafeInteger(n)&&n>=0&&n<=max,'Ungültiger Geldbetrag.');return n;}
 function calendarWeek(v:unknown){const s=text(v,8);need(/^\d{4}-W\d{2}$/.test(s)&&weekOf(weekStart(s))===s,'Ungültige Kalenderwoche.');return s;}
-export async function GET(request:Request){try{await actor(request);return Response.json(await readData(new URL(request.url).searchParams.get('project')||undefined),{headers:{'Cache-Control':'no-store'}});}catch(e){return Response.json({error:e instanceof Error?e.message:'Daten konnten nicht geladen werden.'},{status:400});}}
+export async function GET(request:Request){try{await actor(request);await syncPlanProjects().catch(()=>{});return Response.json(await readData(new URL(request.url).searchParams.get('project')||undefined),{headers:{'Cache-Control':'no-store'}});}catch(e){return Response.json({error:e instanceof Error?e.message:'Daten konnten nicht geladen werden.'},{status:400});}}
 export async function POST(request:Request){try{
  const user=await actor(request);need(Number(request.headers.get('content-length')||0)<3_000_000,'Import ist zu groß. Bitte aufteilen.');const b=await request.json() as {action:string;projectId:string;project:Project;positions:Position[];report:Report;id:string;updatedAt:string;reason:string;review:Report['review'];note:string;week:string;amount:number;number:string;date:string;closureId:string;reference:string;reportIds:string[];versions:Record<string,string>;area:string;fileId:string;to:string;cc:string;subject:string;body:string;includeSummary:boolean};const action=text(b.action,50),now=new Date().toISOString();let projectId=text(b.projectId,100);
  if(action==='saveProject'&&!projectId){
@@ -144,7 +145,7 @@ export async function POST(request:Request){try{
    if(action==='projectImpact')return Response.json({ok:true,impact,sensitive,number:project.number});
    if(sensitive)need(text((b as unknown as {confirmNumber:string}).confirmNumber,100)===project.number,'Bitte die Projektnummer zur Bestätigung eintragen.');
    const keys=data.files.flatMap(f=>[f.key,f.original?.key]).concat(data.packages.map(p=>(p as MailPackage&{emlKey?:string}).emlKey)).filter((k):k is string=>!!k);
-   await db().batch([db().prepare('DELETE FROM records WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM audit WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM project_revisions WHERE id = ?').bind(projectId),db().prepare('INSERT INTO audit (id,project_id,action,user,detail,at) VALUES (?,?,?,?,?,?)').bind(crypto.randomUUID(),'system','Projekt gelöscht',user,`${project.number} · ${project.name} · ${impact.reports} Aufmaße, ${invoices.length} Rechnungen, ${impact.payments} Zahlungen`,now)]);
+   await db().batch([db().prepare('DELETE FROM records WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM audit WHERE project_id = ?').bind(projectId),db().prepare('DELETE FROM project_revisions WHERE id = ?').bind(projectId),...(project.planId?[db().prepare("INSERT OR REPLACE INTO records (id,kind,project_id,data,updated_at) VALUES (?,'plandeleted','system','{}',?)").bind('plandel:'+project.planId,now)]:[]),db().prepare('INSERT INTO audit (id,project_id,action,user,detail,at) VALUES (?,?,?,?,?,?)').bind(crypto.randomUUID(),'system','Projekt gelöscht',user,`${project.number} · ${project.name} · ${impact.reports} Aufmaße, ${invoices.length} Rechnungen, ${impact.payments} Zahlungen`,now)]);
    await Promise.all(keys.map(k=>bucket().delete(k).catch(()=>{})));
    return Response.json({ok:true,id:projectId});
  }
@@ -184,6 +185,24 @@ export async function POST(request:Request){try{
  else throw new Error('Unbekannte Aktion.');
  await commit(projectId,action,user,puts,deletes,detail,revision.version,directoryChange);return Response.json({ok:true,id,...extra,...(createdPosition?{position:createdPosition}:{})});
  }catch(e){return Response.json({error:e instanceof Error?e.message:'Speichern fehlgeschlagen.'},{status:400});}}
+
+// Every active Montageplanung project appears here on its own. A project a Planer deleted stays away.
+async function syncPlanProjects(){
+ const plan=await readPlan();if(!plan.projects.length)return;
+ const rows=await db().prepare("SELECT id,kind,data FROM records WHERE kind IN ('project','plandeleted')").all<{id:string;kind:string;data:string}>();
+ const existing=rows.results.filter(r=>r.kind==='project').map(r=>JSON.parse(r.data) as Project),removed=new Set(rows.results.filter(r=>r.kind==='plandeleted').map(r=>r.id.slice(8)));
+ for(const m of plan.projects){
+  if(removed.has(m.id)||existing.some(p=>p.planId===m.id||(!p.planId&&((m.number&&p.number===m.number)||p.name.trim().toLowerCase()===m.name.trim().toLowerCase()))))continue;
+  try{
+   const directory=await readEmployeeDirectory(),now=new Date().toISOString(),mail=(v:string)=>/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(v.trim())?v.trim():'';
+   const base:Project={id:'',name:m.name,number:m.number||'ohne Nummer',orderNumber:m.orderNumber,customer:m.customer,address:m.address,areas:[],foremanName:m.foreman,contact:m.foreman,measurementEmail:mail(m.email),invoiceEmail:'',cc:'',contacts:'',factor:.9,deadlineDays:0,deadlineType:'calendar',template:defaultTemplate,hourlyNote:false,requiresCumulative:true,timeRates:defaultTimeRates(),planId:m.id,updatedAt:''};
+   const contactPersons=m.contacts.map(c=>({id:crypto.randomUUID(),name:c.name,role:c.role,phone:c.phone,email:mail(c.email)}));
+   let project:Project;try{project=projectValues({...base,contactPersons},'plan-'+m.id,now);}catch{project=projectValues(base,'plan-'+m.id,now);}
+   project.employees=directory.employees;
+   await createProject(project,'Montageplanung',undefined,directory.token);
+  }catch{/* another request created it first, or the data is unusable; try again on the next load */}
+ }
+}
 
 function projectValues(v:Project,id:string,now:string):Project{
  need(v&&text(v.name)&&text(v.number),'Projektname und Projektnummer fehlen.');need(v.requiresCumulative===undefined||typeof v.requiresCumulative==='boolean','Bitte die Einstellung zur kumulierten Aufstellung prüfen.');const factor=Number(v.factor);need(Number.isFinite(factor)&&factor>=0&&factor<=1,'Mitarbeiterfaktor muss zwischen 0 und 1 liegen.');const days=integer(v.deadlineDays,90),contactPersons=validateProjectContacts(v.contactPersons);return{id,name:text(v.name,200),foremanName:text(v.foremanName,160),number:text(v.number,100),orderNumber:text(v.orderNumber,100),customer:text(v.customer,200),address:text(v.address,1000),areas:[...new Set((v.areas||[]).map(x=>text(x,200)).filter(Boolean))].slice(0,100),teams:projectTeams(v.teams||[]),employees:projectEmployees(v.employees||[]),measurementEmail:emails(v.measurementEmail),invoiceEmail:emails(v.invoiceEmail),cc:emails(v.cc),contact:text(v.contact,200)||text(v.foremanName,160),...(v.planId?{planId:text(v.planId,100)}:{}),contacts:contactPersons===undefined?text(v.contacts,5000):contactText(contactPersons),...(contactPersons===undefined?{}:{contactPersons}),factor,deadlineDays:days,deadlineType:v.deadlineType==='working'?'working':'calendar',template:text(v.template||defaultTemplate,20000),hourlyNote:!!v.hourlyNote,requiresCumulative:requiresCumulative(v),timeRates:validateTimeRates(v.timeRates),updatedAt:now};
