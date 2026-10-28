@@ -216,13 +216,25 @@ async function syncPlanProjects(){
   for(const person of plan.employees){const parts=person.name.trim().split(/\s+/);if(parts.length<2)continue;const key=parts.join(' ').toLowerCase();if(known.has(key))continue;known.add(key);incoming.push({id:crypto.randomUUID(),firstName:parts.slice(0,-1).join(' '),lastName:parts[parts.length-1],code:''});}
   if(incoming.length)await commit(anchor.id,'Mitarbeiter aus Montageplanung','Montageplanung',[],[],incoming.length+' neu',undefined,{value:{...directory,employees:addDirectoryEmployees(directory.employees,incoming),token:crypto.randomUUID(),updatedAt:new Date().toISOString()},expectedToken:directory.token});
  }catch{/* retried on the next load */}
- if(!plan.contractors.length)return;
- const projects=await db().prepare("SELECT data FROM records WHERE kind = 'project'").all<{data:string}>();
- for(const row of projects.results){
-  const p=JSON.parse(row.data) as Project,teams=p.teams||[],companies=new Set(teams.map(t=>t.company.trim().toLowerCase())),used=new Set(teams.map(t=>t.code)),added:ProjectTeam[]=[];
-  for(const c of plan.contractors){const name=c.name.trim();if(!name||companies.has(name.toLowerCase()))continue;companies.add(name.toLowerCase());let n=1;while(used.has('T'+n))n++;used.add('T'+n);added.push({code:'T'+n,company:name,employees:['',''],hourlyRate:null});}
-  if(added.length){try{await commit(p.id,'Nachunternehmer aus Montageplanung','Montageplanung',[{kind:'project',value:{...p,teams:[...teams,...added],updatedAt:new Date().toISOString()} as Project}],[],added.map(t=>t.company).join(', '));}catch{/* retried on the next load */}}
+ // Contractors become teams only in projects where Montageplanung assigns them.
+ const rows2=await db().prepare("SELECT data FROM records WHERE kind = 'project'").all<{data:string}>();
+ const cleaned=await db().prepare("SELECT 1 AS n FROM records WHERE id = 'migration:plan-teams-1'").first();
+ for(const row of rows2.results){
+  const p=JSON.parse(row.data) as Project;if(!p.planId)continue;
+  const mine=plan.assigned.filter(a=>a.projectId===p.planId),assignedNames=new Set(mine.map(a=>a.name.trim().toLowerCase())),contractorNames=new Set(plan.contractors.map(c=>c.name.trim().toLowerCase()));
+  let teams=p.teams||[];
+  if(!cleaned){
+   // Remove placeholder teams that an earlier version added to every project, unless a report already uses them.
+   const used=new Set((await db().prepare("SELECT data FROM records WHERE kind = 'report' AND project_id = ?").bind(p.id).all<{data:string}>()).results.flatMap(r=>reportCrews(JSON.parse(r.data) as Report).map(c=>c.team)));
+   teams=teams.filter(t=>!(contractorNames.has(t.company.trim().toLowerCase())&&!assignedNames.has(t.company.trim().toLowerCase())&&t.hourlyRate===null&&!t.employees.some(Boolean)&&!used.has(t.code)));
+  }
+  const companies=new Set(teams.map(t=>t.company.trim().toLowerCase())),codes=new Set(teams.map(t=>t.code)),added:ProjectTeam[]=[];
+  for(const a of mine){const name=a.name.trim();if(!name||companies.has(name.toLowerCase()))continue;companies.add(name.toLowerCase());let n=1;while(codes.has('T'+n))n++;codes.add('T'+n);added.push({code:'T'+n,company:name,employees:[name,a.max>=2?name+' 2':''],hourlyRate:null});}
+  teams=teams.map(t=>assignedNames.has(t.company.trim().toLowerCase())&&!t.employees.some(Boolean)?{...t,employees:[t.company,mine.find(a=>a.name.trim().toLowerCase()===t.company.trim().toLowerCase())!.max>=2?t.company+' 2':'']}:t);
+  const next=[...teams,...added];
+  if(JSON.stringify(next)!==JSON.stringify(p.teams||[])){try{await commit(p.id,'Nachunternehmer aus Montageplanung','Montageplanung',[{kind:'project',value:{...p,teams:next,updatedAt:new Date().toISOString()} as Project}],[],added.map(t=>t.company).join(', '));}catch{/* retried on the next load */}}
  }
+ if(!cleaned)await db().prepare("INSERT OR IGNORE INTO records (id,kind,project_id,data,updated_at) VALUES ('migration:plan-teams-1','migration','system','{}',?)").bind(new Date().toISOString()).run();
 }
 
 function projectValues(v:Project,id:string,now:string):Project{
