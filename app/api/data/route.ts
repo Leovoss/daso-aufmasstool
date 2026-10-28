@@ -191,16 +191,37 @@ async function syncPlanProjects(){
  const plan=await readPlan();if(!plan.projects.length)return;
  const rows=await db().prepare("SELECT id,kind,data FROM records WHERE kind IN ('project','plandeleted')").all<{id:string;kind:string;data:string}>();
  const existing=rows.results.filter(r=>r.kind==='project').map(r=>JSON.parse(r.data) as Project),removed=new Set(rows.results.filter(r=>r.kind==='plandeleted').map(r=>r.id.slice(8)));
+ const repaired=await db().prepare("SELECT 1 AS n FROM records WHERE id = 'migration:plan-email-1'").first();
+ if(!repaired){
+  for(const m of plan.projects){const p=existing.find(x=>x.planId===m.id);if(p&&m.email&&p.measurementEmail.trim().toLowerCase()===m.email.trim().toLowerCase()){try{await commit(p.id,'Aufmaß-E-Mail bereinigt','Montageplanung',[{kind:'project',value:{...p,measurementEmail:'',updatedAt:new Date().toISOString()} as Project}]);}catch{/* retried on the next load */}}}
+  await db().prepare("INSERT OR IGNORE INTO records (id,kind,project_id,data,updated_at) VALUES ('migration:plan-email-1','migration','system','{}',?)").bind(new Date().toISOString()).run();
+ }
  for(const m of plan.projects){
   if(removed.has(m.id)||existing.some(p=>p.planId===m.id||(!p.planId&&((m.number&&p.number===m.number)||p.name.trim().toLowerCase()===m.name.trim().toLowerCase()))))continue;
   try{
    const directory=await readEmployeeDirectory(),now=new Date().toISOString(),mail=(v:string)=>/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(v.trim())?v.trim():'';
-   const base:Project={id:'',name:m.name,number:m.number||'ohne Nummer',orderNumber:m.orderNumber,customer:m.customer,address:m.address,areas:[],foremanName:m.foreman,contact:m.foreman,measurementEmail:mail(m.email),invoiceEmail:'',cc:'',contacts:'',factor:.9,deadlineDays:0,deadlineType:'calendar',template:defaultTemplate,hourlyNote:false,requiresCumulative:true,timeRates:defaultTimeRates(),planId:m.id,updatedAt:''};
+   const base:Project={id:'',name:m.name,number:m.number||'ohne Nummer',orderNumber:m.orderNumber,customer:m.customer,address:m.address,areas:[],foremanName:m.foreman,contact:m.foreman,measurementEmail:'',invoiceEmail:'',cc:'',contacts:'',factor:.9,deadlineDays:0,deadlineType:'calendar',template:defaultTemplate,hourlyNote:false,requiresCumulative:true,timeRates:defaultTimeRates(),planId:m.id,updatedAt:''};
    const contactPersons=m.contacts.map(c=>({id:crypto.randomUUID(),name:c.name,role:c.role,phone:c.phone,email:mail(c.email)}));
    let project:Project;try{project=projectValues({...base,contactPersons},'plan-'+m.id,now);}catch{project=projectValues(base,'plan-'+m.id,now);}
    project.employees=directory.employees;
    await createProject(project,'Montageplanung',undefined,directory.token);
   }catch{/* another request created it first, or the data is unusable; try again on the next load */}
+ }
+
+ // Employees and contractors follow Montageplanung as well. Nothing is removed here, because saved reports refer to them.
+ const anchor=await db().prepare("SELECT id FROM records WHERE kind = 'project' ORDER BY id LIMIT 1").first<{id:string}>();
+ if(!anchor)return;
+ try{
+  const directory=await readEmployeeDirectory(),known=new Set(directory.employees.map(e=>(e.firstName+' '+e.lastName).trim().toLowerCase().replace(/\s+/g,' '))),incoming:ProjectEmployee[]=[];
+  for(const person of plan.employees){const parts=person.name.trim().split(/\s+/);if(parts.length<2)continue;const key=parts.join(' ').toLowerCase();if(known.has(key))continue;known.add(key);incoming.push({id:crypto.randomUUID(),firstName:parts.slice(0,-1).join(' '),lastName:parts[parts.length-1],code:''});}
+  if(incoming.length)await commit(anchor.id,'Mitarbeiter aus Montageplanung','Montageplanung',[],[],incoming.length+' neu',undefined,{value:{...directory,employees:addDirectoryEmployees(directory.employees,incoming),token:crypto.randomUUID(),updatedAt:new Date().toISOString()},expectedToken:directory.token});
+ }catch{/* retried on the next load */}
+ if(!plan.contractors.length)return;
+ const projects=await db().prepare("SELECT data FROM records WHERE kind = 'project'").all<{data:string}>();
+ for(const row of projects.results){
+  const p=JSON.parse(row.data) as Project,teams=p.teams||[],companies=new Set(teams.map(t=>t.company.trim().toLowerCase())),used=new Set(teams.map(t=>t.code)),added:ProjectTeam[]=[];
+  for(const c of plan.contractors){const name=c.name.trim();if(!name||companies.has(name.toLowerCase()))continue;companies.add(name.toLowerCase());let n=1;while(used.has('T'+n))n++;used.add('T'+n);added.push({code:'T'+n,company:name,employees:['',''],hourlyRate:null});}
+  if(added.length){try{await commit(p.id,'Nachunternehmer aus Montageplanung','Montageplanung',[{kind:'project',value:{...p,teams:[...teams,...added],updatedAt:new Date().toISOString()} as Project}],[],added.map(t=>t.company).join(', '));}catch{/* retried on the next load */}}
  }
 }
 
