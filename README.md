@@ -42,17 +42,38 @@ Worker secrets (`wrangler secret put <name> --name daso-aufmasstool`):
 | `DASO_CRON_SECRET` | Bearer token for `POST /api/inbox/run` from a scheduler |
 | `DASO_INBOX_SERVICE_ENABLED` | `1` allows the inbox sync endpoint |
 
-Roles are `access:<email>` records in `records` (Planer or Obermonteur).
+Roles come from the Montageplanung users table. `access:<email>` records in `records` (Planer or Obermonteur) cover people who are not listed there, and `DASO_OWNER_EMAIL` is always a Planer.
 
 ## Build and deploy
 
 The Worker `daso-aufmasstool` is connected to this repository through Cloudflare
 Workers Builds. Build settings:
 
-- Build command: `pnpm install --frozen-lockfile && pnpm run build && node scripts/patch-wrangler-config.mjs`
-- Deploy command: `npx wrangler deploy --config dist/server/wrangler.json`
+- Build command: `pnpm run build`
+- Deploy command: `npx wrangler deploy`
 
+The build writes `dist/server/wrangler.json` with the production bindings from
+`vite.config.ts`, and `wrangler deploy` follows `.wrangler/deploy/config.json` to it.
 `.github/workflows/ci.yml` runs type-check and tests on every push.
+
+## Customer link
+
+Every package sent from the tool gets a link of the form `/p/<token>` in the mail.
+The customer checks the quantities, enters corrections and submits once. The
+submission creates a PDF without form fields (with the correction as an embedded
+JSON attachment) and waits for an Obermonteur or Planer to apply or reject it in
+the Versand tab. Tokens are random, only their SHA-256 is stored, and links expire
+after 60 days.
+
+These paths must be reachable without Cloudflare Access, as a second Access
+application with a Bypass policy: `/p/*`, `/api/portal`, `/_next/*`,
+`/daso-logo.png` and `/favicon.svg`. Everything else stays behind Access.
+
+## Montageplanung
+
+The Worker has a second D1 binding, `PLAN_DB`, to the Montageplanung database. It is
+only read: user roles (`planer`, `obermonteur`, `monteur`) decide access here, and
+planned projects with customer contacts can be copied into a new project.
 
 ## Database migrations
 

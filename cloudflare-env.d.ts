@@ -1,6 +1,7 @@
 declare namespace Cloudflare {
   interface Env {
     DB?: D1Database;
+    PLAN_DB?: D1Database;
     BUCKET?: R2Bucket;
     DASO_SETTINGS_KEY?: string;
     DASO_OWNER_EMAIL?: string;

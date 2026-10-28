@@ -34,12 +34,23 @@ function crossSiteWrite(request:Request){
  if(site)return site!=='same-origin'&&site!=='none';
  return !!origin&&origin!==new URL(request.url).origin;
 }
+// Users and roles are managed in Montageplanung. A user listed there as Monteur has no access here.
+async function planUser(email:string):Promise<{role:Identity['role'];name:string}|'none'|null>{
+ const plan=(env as unknown as {PLAN_DB?:D1Database}).PLAN_DB;if(!plan)return null;
+ const row=await plan.prepare('SELECT name,access_role FROM users WHERE lower(email) = ?').bind(email).first<{name:string;access_role:string}>();
+ if(!row)return null;
+ const role=({planer:'Planer',obermonteur:'Obermonteur'} as Record<string,Identity['role']>)[row.access_role];
+ return role?{role,name:row.name}:'none';
+}
 export async function identity(request:Request):Promise<Identity>{
  if(crossSiteWrite(request))throw Error('Anfrage von einer fremden Seite abgelehnt.');
  const email=await accessEmail(request);
  if(!email){const s=env as unknown as Settings;if(s.DASO_DEV_IDENTITY==='1'&&!s.CF_ACCESS_AUD)return{id:'local',email:'',role:'Planer',name:'Lokale Prüfung'};throw Error('Bitte anmelden.');}
  const owner=(env as unknown as Settings).DASO_OWNER_EMAIL?.trim().toLowerCase();
  if(owner&&email===owner)return{id:email,email,role:'Planer',name:email};
+ const planned=await planUser(email);
+ if(planned==='none')throw Error('Zugriff ist nur für freigeschaltete Obermonteure und Planer möglich.');
+ if(planned)return{id:email,email,role:planned.role,name:planned.name||email};
  const row=await db().prepare("SELECT data FROM records WHERE id = ? AND kind = 'access'").bind('access:'+email).first<{data:string}>();
  const access=row?JSON.parse(row.data):null;
  if(!access||!['Planer','Obermonteur'].includes(access.role)||access.disabled)throw Error('Zugriff ist nur für freigeschaltete Obermonteure und Planer möglich.');

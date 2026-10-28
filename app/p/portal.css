@@ -1,0 +1,25 @@
+.portal{min-height:100vh;background:#f6f8fb;padding:20px 14px 48px;color:#17233a}
+.portal header{max-width:880px;margin:0 auto 16px}
+.portal-card{max-width:880px;margin:0 auto;background:#fff;border:1px solid #e0e6ee;border-radius:12px;padding:22px 20px}
+.portal h1{font-size:24px;margin:0 0 6px}
+.portal h2{font-size:15px;margin:22px 0 10px;color:#492ade}
+.portal-meta{color:#5b6980;font-size:13px;line-height:1.5}
+.portal-table{border:1px solid #e0e6ee;border-radius:8px;overflow:hidden}
+.portal-head,.portal-row{display:grid;grid-template-columns:78px minmax(0,1fr) 120px 170px;gap:10px;padding:10px 12px;align-items:start}
+.portal-head{background:#f1f3f8;font-size:12px;font-weight:700}
+.portal-row{border-top:1px solid #edf0f5;font-size:14px;overflow-wrap:anywhere}
+.portal-row.changed{background:#fff4f4}
+.portal .num{text-align:right}
+.portal-row s{color:#8a94a6}
+.portal-row input{width:100%;min-height:42px;border:1px solid #cbd4e2;border-radius:8px;padding:0 10px;font-size:16px;text-align:right}
+.portal-row.changed input{border-color:#c0392b;color:#c0392b;font-weight:700}
+.portal-diff{display:block;margin-top:4px;color:#c0392b;font-size:12px;font-weight:700}
+.portal-field{display:block;margin-top:18px;font-weight:600;font-size:13px}
+.portal-field input,.portal-field textarea{display:block;width:100%;margin-top:6px;border:1px solid #cbd4e2;border-radius:8px;padding:10px;font-size:16px;font-family:inherit}
+.portal-check{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-size:14px}
+.portal-check input{width:20px;height:20px;margin-top:1px}
+.portal-button{display:inline-block;margin-top:18px;min-height:46px;padding:0 22px;border:0;border-radius:9px;background:#492ade;color:#fff;font-size:16px;font-weight:700;cursor:pointer;line-height:46px;text-decoration:none}
+.portal-button:disabled{background:#b9b2e8;cursor:not-allowed}
+.portal-error{color:#b3261e;font-weight:600;margin-top:14px}
+.portal-done{border:1px solid #bfe3cb;background:#f1fbf4;border-radius:10px;padding:16px;margin-top:14px}
+@media(max-width:640px){.portal-head{display:none}.portal-row{grid-template-columns:1fr}.portal .num{text-align:left}.portal-card{padding:18px 14px}}
