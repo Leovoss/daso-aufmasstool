@@ -26,3 +26,10 @@ export async function readPlanDay(projectId:string,day:string):Promise<PlanDay>{
  const rows=await plan.prepare("SELECT r.name AS name,r.kind AS kind,a.count AS count FROM assignments a JOIN resources r ON r.id = a.resource_id WHERE a.project_id = ? AND a.day = ? AND a.assignment_type = 'project' AND r.archived_at IS NULL ORDER BY r.name").bind(projectId,day).all<Row>();
  return{employees:rows.results.filter(r=>r.kind==='employee').map(r=>r.name||''),contractors:rows.results.filter(r=>r.kind==='contractor').map(r=>({name:r.name||'',count:Math.max(1,Number(r.count)||1)}))};
 }
+
+// Employees Montageplanung has assigned to a project on any day.
+export async function readPlanPeople(projectId:string):Promise<string[]>{
+ const plan=(env as unknown as {PLAN_DB?:D1Database}).PLAN_DB;if(!plan)return[];
+ const rows=await plan.prepare("SELECT DISTINCT r.name AS name FROM assignments a JOIN resources r ON r.id = a.resource_id WHERE a.project_id = ? AND r.kind = 'employee' AND r.archived_at IS NULL AND a.assignment_type = 'project' ORDER BY r.name").bind(projectId).all<Row>();
+ return rows.results.map(r=>r.name||'');
+}

@@ -17,7 +17,7 @@ export async function checkSharedEmployees({Miniflare,script,sql,headers,project
   let data=await get(first.id);const bootstrap=data.employeeDirectory.employees;
   assert.equal(bootstrap.length,2,'existing entries from all projects are included once');assert.equal(new Set(bootstrap.map(e=>e.code)).size,2,'legacy abbreviation collisions are resolved');assert(bootstrap.find(e=>e.id===alias.id).legacyIds.includes(a.id));assert.deepEqual(own(data,first.id).employees,own(data,second.id).employees);
   assert.deepEqual(data.reports[0].employeeMembers,oldReport.employeeMembers,'bootstrap leaves historical members intact');
-  const crew=ui.renderCrew(own(data,first.id),oldReport);assert.equal((crew.match(/class="[^"]*\bcrew-button\b/g)||[]).length,3,'a historical alias does not create a second button for the same employee');assert(crew.includes('DaSo-Mitarbeiter · alle Projekte'));
+  const crew=ui.renderCrew(own(data,first.id),oldReport);assert.equal((crew.match(/class="[^"]*\bcrew-button\b/g)||[]).length,3,'a historical alias does not create a second button for the same employee');assert(crew.includes('Mitarbeiter dieses Projekts'));
   const inherited=(await post('saveProject','',{project:{...project,name:'Neue Baustelle',number:'NEW-1',employees:[],teams:[]}})).id;
   data=await get(inherited);assert.deepEqual(own(data,inherited).employees,bootstrap,'new project inherits the whole roster without client-supplied employees');
   const added={id:'new-anna',firstName:'Anna',lastName:'Peters',code:'FAKE'};
