@@ -67,3 +67,4 @@
 .archived-toggle{display:flex;align-items:center;gap:8px;font-size:13px;margin-top:8px}.project-admin{display:flex;gap:8px;flex-wrap:wrap}
 .project-admin .message{display:block;margin-top:10px}.project-admin .message p{margin:6px 0}.project-admin .message input{max-width:260px;margin:6px 0}
 .project-admin{display:block}
+.plan-import{padding:14px 12px 4px;border-top:1px solid #edf0f5;margin-top:12px}.plan-import h3{font-size:13px;margin:0 0 4px}.plan-import .muted{font-size:12px;margin:0 0 8px}.plan-import .project-card{width:100%}
