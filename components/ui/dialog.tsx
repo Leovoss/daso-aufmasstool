@@ -56,7 +56,7 @@ function DialogContent({
   showCloseButton?: boolean
 }) {
   // Full-screen sheets on phones are placed with inset-0 only, so no centering transform can ever apply there.
-  const fullscreen = /(large-dialog|report-dialog)/.test(className ?? "")
+  const fullscreen = /(?:^|\s)(?:large-dialog|report-dialog)(?:\s|$)/.test(className ?? "")
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
@@ -71,7 +71,7 @@ function DialogContent({
           // On touch screens an automatic focus opens the keyboard over the form.
           if (window.matchMedia("(pointer: coarse)").matches) {
             event.preventDefault()
-            ;(event.currentTarget as HTMLElement).focus()
+            ;(event.currentTarget as HTMLElement | null)?.focus()
           }
         }}
         {...props}
