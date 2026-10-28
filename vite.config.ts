@@ -19,13 +19,20 @@ export default defineConfig(async () => {
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
         inspectorPort: false,
         config: {
+          name: "daso-aufmasstool",
           main: "vinext/server/fetch-handler",
+          preview_urls: false,
           compatibility_flags: ["nodejs_compat"],
           d1_databases: [
             {
               binding: "DB",
               database_name: "daso-aufmass",
-              database_id: "00000000-0000-4000-8000-000000000000",
+              database_id: "1948e38b-1b13-4ae7-8aa3-e3e039f2eb10",
+            },
+            {
+              binding: "PLAN_DB",
+              database_name: "daso-montageplanung",
+              database_id: "42f5d224-bb84-4fd2-a1f8-d6abfda88956",
             },
           ],
           r2_buckets: [{ binding: "BUCKET", bucket_name: "daso-aufmass-files" }],
